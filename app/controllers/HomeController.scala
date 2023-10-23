@@ -27,14 +27,14 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
                 case GameState.CHOOSEMODE => views.html.gamemode()
                 case GameState.ENTERPLAYERNAMES => views.html.index(tui= controller.field.toString())
                 case GameState.MAINGAME => views.html.index(tui= controller.field.toString())
+                case GameState.WIN => views.html.index(tui= controller.field.toString())
+                case GameState.EXIT => views.html.index(tui= controller.field.toString())
             }
       )
   }
 
   def initGame() = Action {
     implicit request: Request[AnyContent] => 
-      print( request.body.asFormUrlEncoded.get("playerName1").head)
-      controller.setPlayerNames(Move(p1 = request.body.asFormUrlEncoded.get("playerName1").head, p2 = request.body.asFormUrlEncoded.get("playerName1").head))
       controller.setStrategy(
         (request.body.asFormUrlEncoded.get("gamemode").head).toInt match {
           case 1 => Strategy.normalStrategy()
@@ -42,7 +42,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
           case 3 => Strategy.adminStrategy()
         }
       )
-     Ok(views.html.index(tui= controller.field.toString()))
+      controller.setPlayerNames(Move(p1 = request.body.asFormUrlEncoded.get("playerName1").head, p2 = request.body.asFormUrlEncoded.get("playerName2").head))
+      Redirect("/")
   }
 
   def placeCard() = Action { 
