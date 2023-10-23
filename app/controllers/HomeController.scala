@@ -19,6 +19,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * a path of `/`.
    */
   def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index(tui= hearthstoneMini.HearthstoneMini.controller.field.toString()))
+    Ok(views.html.index(tui= hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.tui.toString()))
   }
 }
