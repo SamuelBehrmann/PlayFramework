@@ -1,0 +1,32 @@
+@()
+@import helper._
+
+@main("Welcome to HearthstoneMini") {
+  <h1>Choose the Gamemode!</h1>
+  <body> 
+    <form method="post" id="gamemodeForm",>
+     <input type="input", id="playerName1"> 
+     <label for="playerName1">PlayerName1</label><br>
+     <input type="input", id="playerName2"> 
+     <label for="playerName1">PlayerName2</label><br>
+     <input type="radio", id="normal" name="gamemode"> 
+     <label for="normal">Normal</label><br>
+     <input type="radio", id="hardcore" name="gamemode"> 
+     <label for="hardcore">Hardcore</label><br>
+     <input type="radio", id="debug" name="gamemode"> 
+     <label for="debug">Debug</label><br>
+     <input type="submit", id="submit_button" value="Starten" onsubmit="initGame()"> 
+    </form>
+</body>
+
+<script>
+  function initGame() {
+    var action_src = "http://localhost:9000/initGame/" + document.getElementsByName("playerName1")[0].value
+    + "/" + document.getElementsByName("playerName2")[0].value
+    + "/" + document.getElementsByName("gamemode")[0].value;
+    
+    var your_form = document.getElementById('gamemodeForm');
+    your_form.action = action_src;
+  }
+</script>
+}
