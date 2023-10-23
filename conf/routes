@@ -7,7 +7,7 @@
 + nocsrf
 GET     /                           controllers.HomeController.index()
 + nocsrf
-POST    /initGame/:playerNameOne/:playerNameTwo/:strategy                   controllers.HomeController.initGame(playerNameOne: String, playerNameTwo: String, strategy: Int)
+POST    /initGame                   controllers.HomeController.initGame()
 
 GET     /placeCard                  controllers.HomeController.placeCard()
 GET     /endTurn                    controllers.HomeController.endTurn()
