@@ -10,7 +10,7 @@ import play.api.mvc._
  */
 @Singleton
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
-
+  val controller = hearthstoneMini.HearthstoneMini.controller
   /**
    * Create an Action to render an HTML page.
    *
@@ -19,6 +19,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * a path of `/`.
    */
   def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index(tui= hearthstoneMini.HearthstoneMini.controller.field.toString()))
+    Ok(views.html.index(tui= controller.field.toString()))
   }
 }
