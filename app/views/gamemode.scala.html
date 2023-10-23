@@ -2,20 +2,47 @@
 @import helper._
 
 @main("Welcome to HearthstoneMini") {
-  <h1>Choose the Gamemode!</h1>
-  <body> 
-    <form action="/initGame" method="post" id="gamemodeForm">
-     <input type="input", id="playerName1" name="playerName1"> 
-     <label for="playerName1">PlayerName1</label><br>
-     <input type="input", id="playerName2" name="playerName2"> 
-     <label for="playerName1">PlayerName2</label><br>
-     <input type="radio", id="normal" name="gamemode" value="1"> 
-     <label for="normal">Normal</label><br>
-     <input type="radio", id="hardcore" name="gamemode" value="2"> 
-     <label for="hardcore">Hardcore</label><br>
-     <input type="radio", id="debug" name="gamemode" value="3"> 
-     <label for="debug">Debug</label><br>
-     <input type="submit", id="submit_button" value="Starten"> 
-    </form>
-</body>
+    <html lang="en">
+        <head>
+            <title>Welcome to HearthstoneMini</title>
+            <link rel="icon" type="image/png" href="images/Hearthstone-Icon (1).png">
+        </head>
+        <body>
+            <h1>Welcome to HearthstoneMini</h1>
+            <h2>Choose the Gamemode!</h2>
+            <form action="/initGame" method="post" id="gamemodeForm">
+                <table>
+                    <tr>
+                        <td>PlayerName1:</td>
+                        <td><input type="input" id="playerName1" name="playerName1"></td>
+                    </tr>
+                    <tr>
+                        <td>PlayerName2:</td>
+                        <td><input type="input" id="playerName2" name="playerName2"></td>
+                    </tr>
+                    <tr>
+                        <td>Normal:</td>
+                        <td><input type="radio" id="normal" name="gamemode" value="1"></td>
+                    </tr>
+                    <tr>
+                        <td>Hardcore:</td>
+                        <td><input type="radio" id="hardcore" name="gamemode" value="2"></td>
+                    </tr>
+                    <tr>
+                        <td>Debug:</td>
+                        <td><input type="radio" id="debug" name="gamemode" value="3"></td>
+                    </tr>
+                </table>
+                <input type="submit" id="submit_button" value="Starten">
+            </form>
+        </body>
+    </html>
 }
+
+
+
+
+
+
+
+
