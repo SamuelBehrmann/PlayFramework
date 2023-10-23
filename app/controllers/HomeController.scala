@@ -43,51 +43,51 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     implicit request: Request[AnyContent] => Redirect("/")
   }
 
-  def placeCard() = Action { 
+  def placeCard() = Action {
     controller.placeCard(hearthstoneMini.model.Move(1,1))
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
-  def exitGame() = Action { 
+  def exitGame() = Action {
     controller.exitGame()
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
-  def endTurn() = Action { 
+  def endTurn() = Action {
     controller.switchPlayer()
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
-  def drawCard() = Action { 
+  def drawCard() = Action {
     controller.drawCard()
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
-  def directAttack() = Action { 
+  def directAttack() = Action {
     controller.directAttack(hearthstoneMini.model.Move(1))
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
-  def attack() = Action { 
+  def attack() = Action {
     controller.attack(hearthstoneMini.model.Move(1,1))
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
-  def undo() = Action { 
+  def undo() = Action {
     controller.undo
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
-  def redo() = Action { 
+  def redo() = Action {
     controller.redo
-    
+
     implicit request: Request[AnyContent] =>
     Ok(views.html.index(tui= controller.field.toString()))
   }
