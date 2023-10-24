@@ -31,7 +31,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
                 case GameState.CHOOSEMODE => views.html.gamemode()
                 case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(field = controller.field.toString())
                 case GameState.MAINGAME => views.html.game(msg = controller.errorMsg.getOrElse(controller.field.players(0).name +  hearthstoneMini.aview.Strings.istDranMsg))(field= controller.field.toString())
-                case GameState.WIN => views.html.game(msg = "")(field= controller.field.toString())
+                case GameState.WIN => views.html.game(msg = controller.getWinner().get + hearthstoneMini.aview.Strings.gewonnenMsg)(field= controller.field.toString())
                 case GameState.EXIT => views.html.game(msg = "")(field= controller.field.toString())
             }
       )
@@ -41,9 +41,9 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     implicit request: Request[AnyContent] => 
       controller.setStrategy(
         (request.body.asFormUrlEncoded.get("gamemode").head).toInt match {
-          case 1 => Strategy.normalStrategy()
-          case 2 => Strategy.hardcoreStrategy()
-          case 3 => Strategy.adminStrategy()
+          case 1 => Strategy.normal
+          case 2 => Strategy.hardcore
+          case 3 => Strategy.debug
         }
       )
       controller.setPlayerNames(Move(p1 = request.body.asFormUrlEncoded.get("playerName1").head, p2 = request.body.asFormUrlEncoded.get("playerName2").head))
