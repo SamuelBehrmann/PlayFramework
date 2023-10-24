@@ -9,14 +9,21 @@ GET     /                           controllers.HomeController.index()
 + nocsrf
 POST    /initGame                   controllers.HomeController.initGame()
 
-GET     /startGame                  controllers.HomeController.startGame()
+GET     /hearthstoneMini            controllers.HomeController.game()
 GET     /initGame                   controllers.HomeController.initGame()
 GET     /placeCard                  controllers.HomeController.placeCard()
++ nocsrf
+POST     /placeCard                 controllers.HomeController.placeCard()
 GET     /endTurn                    controllers.HomeController.endTurn()
 GET     /exitGame                   controllers.HomeController.exitGame()
 GET     /drawCard                   controllers.HomeController.drawCard()
++ nocsrf
 GET     /directAttack               controllers.HomeController.directAttack()
++ nocsrf
+POST     /directAttack               controllers.HomeController.directAttack()
 GET     /attack                     controllers.HomeController.attack()
++ nocsrf
+POST     /attack                     controllers.HomeController.attack()
 GET     /undo                       controllers.HomeController.undo()
 GET     /redo                       controllers.HomeController.redo()
 

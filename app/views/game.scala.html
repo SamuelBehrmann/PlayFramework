@@ -1,0 +1,74 @@
+
+@(msg: String)(field: String)
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    </head>
+    <body>
+        <pre>@field</pre>
+        <h2>@msg</h2>
+        <button onclick="revealFields('placeCardForm')">Place card</button>
+        <button onclick="window.location.href='/endTurn'">End turn</button>
+        <button onclick="revealFields('attackForm')">Attack</button>
+        <button onclick="revealFields('directAttackForm')">Direct attack</button>
+        <button onclick="window.location.href='/exitGame'">Exit game</button>
+        <button onclick="window.location.href='/drawCard'">Draw card</button>
+        <button onclick="window.location.href='/undo'">undo</button>
+        <button onclick="window.location.href='/redo'">redo</button>
+        <div id="placeCardForm" style="display: none;">
+            <form action="/placeCard" method="post">
+                <table>
+                    <tr>
+                        <td>Hand slot index:</td>
+                        <td><input type="input" id="handSlotIndex" name="handSlotIndex"></td>
+                    </tr>
+                    <tr>
+                        <td>Own Field index:</td>
+                        <td><input type="input" id="fieldIndex" name="fieldIndex"></td>
+                    </tr>
+                </table>
+                <input type="submit" id="submit_button" value="Send">
+            </form>
+        </div>
+        <div id="attackForm" style="display: none;">
+            <form action="/attack" method="post">
+                <table>
+                    <tr>
+                        <td>Own field index:</td>
+                        <td><input type="input" id="activeFieldIndex" name="activeFieldIndex"></td>
+                    </tr>
+                    <tr>
+                        <td>Enemies field index:</td>
+                        <td><input type="input" id="inactiveFieldIndex" name="inactiveFieldIndex"></td>
+                    </tr>
+                </table>
+                <input type="submit" id="submit_button" value="Send">
+            </form>
+        </div>
+        <div id="directAttackForm" style="display: none;">
+            <form action="/directAttack" method="post">
+                <table>
+                    <tr>
+                        <td>Own field index:</td>
+                        <td><input type="input" id="activeFieldIndex" name="activeFieldIndex"></td>
+                    </tr>
+                </table>
+                <input type="submit" id="submit_button" value="Send">
+            </form>
+        </div>
+      <script src="@routes.Assets.versioned("javascripts/main.js")" type="text/javascript"></script>
+      <script>
+        function revealFields(id) {
+            var x = document.getElementById(id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+      </script>
+    </body>
+</html>
