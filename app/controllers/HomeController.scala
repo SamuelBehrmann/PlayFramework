@@ -1,7 +1,6 @@
 package controllers
 
 import javax.inject._
-import play.api._
 import play.api.mvc._
 import hearthstoneMini.model.Move
 import hearthstoneMini.controller.GameState
@@ -15,27 +14,24 @@ import hearthstoneMini.controller.Strategy
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
   val controller = hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.controller
 
-  /**
-   * Create an Action to render an HTML page.
-   *
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
   def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(controller.gameState match {
-                case GameState.CHOOSEMODE => views.html.gamemode()
-                case GameState.ENTERPLAYERNAMES => views.html.index(tui= controller.field.toString())
-                case GameState.MAINGAME => views.html.index(tui= controller.field.toString())
-                case GameState.WIN => views.html.index(tui= controller.field.toString())
-                case GameState.EXIT => views.html.index(tui= controller.field.toString())
-            }
-      )
+    Ok(views.html.gameRules())
   }
 
-  def initGame() = Action {
-    implicit request: Request[AnyContent] => 
-      controller.setStrategy(
+  def startGame = Action { implicit request: Request[AnyContent] =>
+    Ok(controller.gameState match {
+      case GameState.CHOOSEMODE => views.html.gamemode()
+      case GameState.ENTERPLAYERNAMES => views.html.index(tui = controller.field.toString())
+      case GameState.MAINGAME => views.html.index(tui = controller.field.toString())
+      case GameState.WIN => views.html.index(tui = controller.field.toString())
+      case GameState.EXIT => views.html.index(tui = controller.field.toString())
+    }
+    )
+  }
+
+  def initGame() = Action { implicit request: Request[AnyContent] =>
+
+    controller.setStrategy(
         (request.body.asFormUrlEncoded.get("gamemode").head).toInt match {
           case 1 => Strategy.normalStrategy()
           case 2 => Strategy.hardcoreStrategy()
@@ -43,7 +39,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
         }
       )
       controller.setPlayerNames(Move(p1 = request.body.asFormUrlEncoded.get("playerName1").head, p2 = request.body.asFormUrlEncoded.get("playerName2").head))
-      Redirect("/")
+      Redirect("/startGame")
   }
 
   def placeCard() = Action { 
