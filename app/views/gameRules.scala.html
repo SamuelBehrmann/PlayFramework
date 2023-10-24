@@ -1,11 +1,16 @@
-@main("Gamerules for HearthstoneMini") {
+@main("Game rules for HearthstoneMini") {
     <h1>HearthstoneMini Game Rules</h1>
     <p>Here are the rules for playing HearthstoneMini:</p>
     <ul>
-        <li>Rule 1: ...</li>
-        <li>Rule 2: ...</li>
-            <!-- Add more rules here -->
+        <li>Rule 1: Each player starts with the same amount of HP and Mana.</li>
+        <li>Rule 2: Each round always begins on the same game board.</li>
+        <li>Rule 3: Each player starts with 5 Cards on his hand and 30 in the deck.</li>
+        <li>Rule 4: Play cards from your hand to summon a creature.</li>
+        <li>Rule 5: Attack the enemies creatures or the player directly to deal damage.</li>
+        <li>Rule 6: Use your mana reserves to play cards.</li>
+        <li>Rule 7: Victory condition: enemy hp are 0</li>
     </ul>
 
-    <a href="/startGame">Continue to Game Setup</a>
+@*    <a href="/startGame">Continue to Game Setup</a>*@
+    <button onclick= "window.location.href= '/startGame'">Continue to Game Setup</button>
 }
