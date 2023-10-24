@@ -80,7 +80,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
   def attack() = Action {
     implicit request: Request[AnyContent] =>
-      controller.attack(hearthstoneMini.model.Move(handSlot = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt, fieldSlotActive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt)) 
+      controller.attack(hearthstoneMini.model.Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt, fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt)) 
       Redirect("/hearthstoneMini")
   }
   def undo() = Action { 
