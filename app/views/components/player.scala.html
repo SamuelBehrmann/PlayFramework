@@ -1,0 +1,59 @@
+@(player: hearthstoneMini.model.playerComponent.PlayerInterface)
+
+<div class="player@{player.id}" >
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .slot {
+            width: 150px;
+            height: 150px;
+            border: 1px solid black;
+        }
+
+        .fieldbar {
+            background-color: lightblue;
+        }
+
+        .deck {
+            align-self: flex-end;
+        }
+
+        .hand {
+            background-color: grey;
+            align-self: flex-start;
+        }
+
+        .flex-box {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 5px 5px;
+            border: 1px dotted purple;
+            flex-direction: row;
+        }
+    </style>
+    <div class="flex-box">
+        <span>@player.name</span>
+        <span>@player.gamebar.hp HP</span>
+        <span>@player.gamebar.mana Mana</span>
+    </div>
+    <div class="flex-box"> @for(card <- player.gamebar.hand) { <div class="slot hand">
+            @components.card(card)
+    </div>
+    }
+    <div class="slot deck">Deck: @{player.gamebar.deck.length}</div>
+</div>
+
+<div class="flex-box"> @for(cardOption <- player.fieldbar.cardArea.row) { <div class="slot fieldbar">
+        @cardOption.fold({components.emptyCard()})((card) => components.card(card))
+</div>
+}
+
+<div class="slot deck">Friedhof: @{player.gamebar.friedhof.length}</div>
+</div>
+
+</div>

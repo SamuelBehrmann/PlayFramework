@@ -1,14 +1,13 @@
+@(msg: String)(controller: hearthstoneMini.controller.component.ControllerInterface)
 
-@(msg: String)(field: String)
+@size = @{controller.field.players.head.fieldbar.size}
+@field = @{controller.field}
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-    </head>
-    <body>
-        <pre>@field</pre>
+
+@main("HearthstoneMini") {
+<div class="gamecontainer">
+    <div class="game">
+        @components.field(field)
         <h2>@msg</h2>
         <button onclick="revealFields('placeCardForm')">Place card</button>
         <button onclick="window.location.href='/endTurn'">End turn</button>
@@ -59,16 +58,17 @@
                 <input type="submit" id="submit_button" value="Send">
             </form>
         </div>
-      <script src="@routes.Assets.versioned("javascripts/main.js")" type="text/javascript"></script>
-      <script>
-        function revealFields(id) {
-            var x = document.getElementById(id);
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
+        <script src="@routes.Assets.versioned(" javascripts/main.js")" type="text/javascript"></script>
+        <script>
+            function revealFields(id) {
+                var x = document.getElementById(id);
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
             }
-        }
-      </script>
-    </body>
-</html>
+        </script>
+    </div>
+</div>
+}
