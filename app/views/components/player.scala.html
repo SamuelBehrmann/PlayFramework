@@ -1,86 +1,191 @@
 @(player: hearthstoneMini.model.playerComponent.PlayerInterface)
 
 @gamebar = {
-    @for(card <- player.gamebar.hand) { 
-        <div class="slot hand">
-            @components.card(card)
-        </div>
-    }
-    @for(index <- 0 until (player.fieldbar.size - player.gamebar.hand.length)) {
-        <div class="slot"></div>
-    }
-    <div class="slot deck">Deck: @{player.gamebar.deck.length}</div>
+@for(card <- player.gamebar.hand) {
+    <div class="slot hand">
+    @components.card(card)
+    </div>
+}
+@for(index <- 0 until (player.fieldbar.size - player.gamebar.hand.length)) {
+    <div class="slot empty"></div>
+}
+    <div class="slot deck">Deck: @{
+        player.gamebar.deck.length
+    }</div>
 }
 
 @statusbar = {
-    <span>@player.name</span>
-    <span>@player.gamebar.hp HP</span>
-    <span>@player.gamebar.mana Mana</span>
+    <div class="flex-container">
+        <div class="flex-item">
+            <div class="statusbar">
+                <div class="name-bar">Player: @player.name</div>
+                <div class="hp-bar">HP: @player.gamebar.hp</div>
+                <div class="mana-bar">Mana: @player.gamebar.mana</div>
+            </div>
+        </div>
+    </div>
 }
 
 @fieldbar = {
-    @for(cardOption <- player.fieldbar.cardArea.row) { 
-        <div class="slot fieldbar">
-            @cardOption.fold({components.emptyCard()})((card) => components.card(card))
-        </div>
-    }
-    <div class="slot deck">Friedhof: @{player.gamebar.friedhof.length}</div>
+@for(cardOption <- player.fieldbar.cardArea.row) {
+    <div class="slot fieldbar">
+    @cardOption.fold({
+        components.emptyCard()
+    })((card) => components.card(card))
+    </div>
+}
+    <div class="slot deck">Friedhof: @{
+        player.gamebar.friedhof.length
+    }</div>
 }
 
-<div class="player@{player.id}" style="display: flex; flex-wrap: nowrap; flex-direction: column;" >
+<div class="game-container">
+    <div class="player@{
+        player.id
+    }" style="display: flex;
+        flex-direction: column;">
     <style>
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
+.game-container {
+        display: flex;
+        flex-direction: column;
+        border: 2px solid black;
+    }
 
-        .slot {
-            width: 16.5%;
-            aspect-ratio: 1;
-            border: 1px solid black;
-        }
+    .player-container {
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+        /*background-color: forestgreen;*/
+    }
 
-        .fieldbar {
-            background-color: lightblue;
-        }
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 5px;
+        /*background-color: forestgreen;*/
+    }
 
-        .deck {
-            align-self: flex-end;
-        }
+    .flex-item {
+        flex: 1 1 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 5px;
+        /*background-color: forestgreen;*/
+    }
 
-        .hand {
-            background-color: grey;
-            align-self: flex-start;
-            
-        }
-        .flex-box {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 5px 5px;
-            flex-direction: row;
-        }
+    .center-line {
+        flex-grow: 1;
+        border-top: 1px solid black;
+        margin: 10px -5px;
+    }
+
+    .statusbar {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 0;
+        gap: 15px;
+    }
+
+    .name-bar, .hp-bar, .mana-bar {
+        border: 1px solid;
+        min-width: 100px;
+        padding: 3px;
+        flex: 1 1 0;
+        text-align: center;
+        border-radius: 5px;
+    }
+
+    .name-bar {
+        border-color: black;
+    }
+
+    .hp-bar {
+        border-color: forestgreen;
+    }
+
+    .mana-bar {
+        border-color: blue;
+    }
+
+    .slot {
+        flex: 1 1 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+        background-color: lightblue;
+        min-width: 80px;
+        min-height: 130px;
+        border-radius: 5px;
+    }
+
+    .deck, .friedhof {
+        flex: 1 1 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+        min-width: 50px;
+        min-height: 130px;
+        border-radius: 5px;
+        background-color: aliceblue;
+    }
+
+    .hand {
+        flex: 1 1 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+        background-color: grey;
+        min-width: 80px;
+        min-height: 130px;
+        border-radius: 5px;
+    }
+
+    .empty {
+        background-color: grey;
+    }
+
     </style>
-    @if(player.id == 1) {
-        <div class="flex-box">
-            @statusbar
-         </div>
-         <div class="flex-box">
-             @gamebar
-         </div>
-         <div class="flex-box"> 
-             @fieldbar
-         </div>
-    } else {
-        <div class="flex-box">
-            @fieldbar
-        </div>
-        <div class="flex-box">
-            @gamebar
-        </div>
-        <div class="flex-box"> 
-            @statusbar
-         </div>
+        <div class="player-container">
+        @if(player.id == 1) {
+            <div class="flex-container">
+                <div class="flex-item statusbar">
+                @statusbar
+                </div>
+            </div>
+            <div class="flex-container">
+                <div class="flex-item">
+                @gamebar
+                </div>
+            </div>
+            <div class="center-line"></div>
+            <div class="flex-container">
+                <div class="flex-item">
+                @fieldbar
+                </div>
+            </div>
+        } else {
+            <div class="flex-container">
+                <div class="flex-item">
+                @fieldbar
+                </div>
+            </div>
+            <div class="center-line"></div>
+            <div class="flex-container">
+                <div class="flex-item">
+                @gamebar
+                </div>
+            </div>
+            <div class="flex-container">
+                <div class="flex-item">
+                @statusbar
+                </div>
+            </div>
         }
+        </div>
+    </div>
 </div>
