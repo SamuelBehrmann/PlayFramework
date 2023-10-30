@@ -1,9 +1,6 @@
 @(field: hearthstoneMini.model.fieldComponent.FieldInterface)
 
-@players = @{field.players}
-
 <div class="field" style="width: 100%;">
-   @for(player <- players) {
-      @components.player(player)
-   }
+   @components.player(field.getPlayerById(1))
+   @components.player(field.getPlayerById(2))
 </div>
