@@ -9,7 +9,7 @@ GET     /                           controllers.HomeController.index()
 + nocsrf
 POST    /initGame                   controllers.HomeController.initGame()
 
-GET     /hearthstoneMini            controllers.HomeController.game()
+GET     /hearthstoneMini            controllers.HomeController.game
 GET     /initGame                   controllers.HomeController.initGame()
 GET     /placeCard                  controllers.HomeController.placeCard()
 + nocsrf

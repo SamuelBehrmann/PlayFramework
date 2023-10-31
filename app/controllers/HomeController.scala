@@ -14,7 +14,14 @@ import hearthstoneMini.controller.Strategy
 @Singleton
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
   val controller = hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.controller
-
+  /* 
+    controller.field.players.head.fieldbar.cardArea.row // Card/Field slots to map
+    controller.field.players.head.gamebar.hand // Hand karten 
+    controller.field.players.head.gamebar.deck // Deck 
+    controller.field.players.head.gamebar.friedhof // friedhof
+    controller.field.players.head.gamebar.hp
+    controller.field.players.head.gamebar.mana
+    */
   /**
    * Create an Action to render an HTML page.
    *
@@ -22,6 +29,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
+
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.gameRules())
   }
@@ -29,10 +37,10 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   def game = Action { implicit request: Request[AnyContent] =>
     Ok(controller.gameState match {
                 case GameState.CHOOSEMODE => views.html.gamemode()
-                case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(field = controller.field.toString())
-                case GameState.MAINGAME => views.html.game(msg = controller.errorMsg.getOrElse(controller.field.players(0).name +  hearthstoneMini.aview.Strings.istDranMsg))(field= controller.field.toString())
-                case GameState.WIN => views.html.game(msg = controller.getWinner().get + hearthstoneMini.aview.Strings.gewonnenMsg)(field= controller.field.toString())
-                case GameState.EXIT => views.html.game(msg = "")(field= controller.field.toString())
+                case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(controller = controller)
+                case GameState.MAINGAME => views.html.game(msg = controller.errorMsg.getOrElse(controller.field.players(0).name +  hearthstoneMini.aview.Strings.istDranMsg))(controller = controller)
+                case GameState.WIN => views.html.game(msg = controller.getWinner().get + hearthstoneMini.aview.Strings.gewonnenMsg)(controller = controller)
+                case GameState.EXIT => views.html.game(msg = "")(controller = controller)
             }
       )
   }
