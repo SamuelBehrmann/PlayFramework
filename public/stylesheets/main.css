@@ -18,6 +18,7 @@ body {
 
 #welcome-body {
     margin: 0;
+    position: fixed;
 }
 
 .button-panel {
