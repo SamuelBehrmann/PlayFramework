@@ -1,15 +1,23 @@
-2023-10-29 23:21:14 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+2023-10-31 09:40:32 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
 
     play.filters.csrf.CSRFFilter
     play.filters.headers.SecurityHeadersFilter
     play.filters.hosts.AllowedHostsFilter
 
-2023-10-29 23:21:14 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
-2023-10-29 23:21:56 [34mINFO [0;39m [36mp.a.http.HttpErrorHandlerExceptions[0;39m [35m[0;39m Registering exception handler: guice-provision-exception-handler
-2023-10-29 23:21:56 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+2023-10-31 09:40:32 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
+2023-10-31 09:41:21 [34mINFO [0;39m [36mp.a.http.HttpErrorHandlerExceptions[0;39m [35m[0;39m Registering exception handler: guice-provision-exception-handler
+2023-10-31 09:41:21 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
 
     play.filters.csrf.CSRFFilter
     play.filters.headers.SecurityHeadersFilter
     play.filters.hosts.AllowedHostsFilter
 
-2023-10-29 23:21:56 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
+2023-10-31 09:41:21 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
+2023-10-31 09:42:38 [34mINFO [0;39m [36mp.a.http.HttpErrorHandlerExceptions[0;39m [35m[0;39m Registering exception handler: guice-provision-exception-handler
+2023-10-31 09:42:38 [34mINFO [0;39m [36mplay.api.http.EnabledFilters[0;39m [35m[0;39m Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2023-10-31 09:42:38 [34mINFO [0;39m [36mplay.api.Play[0;39m [35m[0;39m Application started (Dev) (no global state)
