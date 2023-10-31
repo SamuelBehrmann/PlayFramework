@@ -13,7 +13,7 @@ body {
     max-width: 100vh;
     height: 100vh;
     box-sizing: border-box;
-
+    position: fixed;
 }
 
 #welcome-body {
