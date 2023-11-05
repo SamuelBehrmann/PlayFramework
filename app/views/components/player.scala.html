@@ -1,86 +1,39 @@
 @(player: hearthstoneMini.model.playerComponent.PlayerInterface)
 
-@gamebar = {
-    @for(card <- player.gamebar.hand) { 
-        <div class="slot hand">
-            @components.card(card)
-        </div>
+<div class="player@{
+    player.id
+} player">
+@if(player.id == 1) {
+    <div class="hand">
+    @for(card <- player.gamebar.hand) {
+        <div class="card">@components.card(card)</div>
     }
-    @for(index <- 0 until (player.fieldbar.size - player.gamebar.hand.length)) {
-        <div class="slot"></div>
+    </div>
+    @* <div class="fieldbar">*@
+    @* @for(cardOption <- player.fieldbar.cardArea.row) {*@
+    @* <div class="card">@cardOption.fold({*@
+    @* components.emptyCard()*@
+    @* })((card) => components.card(card))</div>*@
+    @* }*@
+    @* </div>*@
+} else {
+    @* <div class="hand">*@
+    @* @for(cardOption <- player.fieldbar.cardArea.row) {*@
+    @* <div class="card">@cardOption.fold({*@
+    @* components.emptyCard()*@
+    @* })((card) => components.card(card))</div>*@
+    @* }*@
+    @* </div>*@
+    <div class="hand">
+        @for(card <- player.gamebar.hand) {
+        <div class="card">@components.card(card)</div>
     }
-    <div class="slot deck">Deck: @{player.gamebar.deck.length}</div>
+    </div>
 }
 
-@statusbar = {
-    <span>@player.name</span>
-    <span>@player.gamebar.hp HP</span>
-    <span>@player.gamebar.mana Mana</span>
-}
 
-@fieldbar = {
-    @for(cardOption <- player.fieldbar.cardArea.row) { 
-        <div class="slot fieldbar">
-            @cardOption.fold({components.emptyCard()})((card) => components.card(card))
-        </div>
-    }
-    <div class="slot deck">Friedhof: @{player.gamebar.friedhof.length}</div>
-}
-
-<div class="player@{player.id}" style="display: flex; flex-wrap: nowrap; flex-direction: column;" >
-    <style>
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        .slot {
-            width: 16.5%;
-            aspect-ratio: 1;
-            border: 1px solid black;
-        }
-
-        .fieldbar {
-            background-color: lightblue;
-        }
-
-        .deck {
-            align-self: flex-end;
-        }
-
-        .hand {
-            background-color: grey;
-            align-self: flex-start;
-            
-        }
-        .flex-box {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 5px 5px;
-            flex-direction: row;
-        }
-    </style>
-    @if(player.id == 1) {
-        <div class="flex-box">
-            @statusbar
-         </div>
-         <div class="flex-box">
-             @gamebar
-         </div>
-         <div class="flex-box"> 
-             @fieldbar
-         </div>
-    } else {
-        <div class="flex-box">
-            @fieldbar
-        </div>
-        <div class="flex-box">
-            @gamebar
-        </div>
-        <div class="flex-box"> 
-            @statusbar
-         </div>
-        }
 </div>
+
+<link rel="stylesheet" type="text/css" href="main.less">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.12.2/less.min.js"></script>
+
