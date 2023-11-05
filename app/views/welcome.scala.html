@@ -1,0 +1,13 @@
+@()
+
+@main("Welcome to HearthstoneMini") {
+
+<body id="welcome-body">
+  <div id="welcome-background">
+    <div class="button-panel">
+      @components.button("Rules", "/gameRules", "classic")
+      @components.button("Play Now", "/hearthstoneMini", "gold")
+    </div>
+  </div>
+</body>
+}

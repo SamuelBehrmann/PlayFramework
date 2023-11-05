@@ -1,0 +1,11 @@
+@(content: String, ref: String, variant: String)
+
+<div class="hs-wrapper @variant">
+    <a class='hs-button @variant' onclick="window.location.href='@ref'">
+      <span class='hs-border @variant'>
+        <span class='hs-text @variant'>
+          @content
+        </span>
+      </span>
+    </a>
+  </div>

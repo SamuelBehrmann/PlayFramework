@@ -5,7 +5,7 @@ version := "1.0-SNAPSHOT"
 scalacOptions ++= Seq(          // use ++= to add to existing options
   "-Ytasty-reader"               // exploit "trailing comma" syntax so you can add an option without editing this line
 ) 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala).enablePlugins(SbtWeb)
 //generateReverseRouter := false
 scalaVersion := "2.13.12"
 
