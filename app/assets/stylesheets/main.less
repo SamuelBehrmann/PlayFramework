@@ -9,11 +9,86 @@
     z-index: 0;
 }
 
-body {
+body,
+html {
     max-width: 100vh;
-    height: 100vh;
+    height: 100%;
     box-sizing: border-box;
     position: fixed;
+}
+
+#rules-body {
+    margin: 0;
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    ;
+    position: fixed;
+    font-family: 'Fondamento', cursive;
+
+    #background {
+        position: relative;
+        background-image: url('../images/rules/background.jpeg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: rgba(0, 0, 0, 0.3);
+        background-blend-mode: color;
+        filter: blur(5px);
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+    }
+
+    span {
+        font-size: 18pt;
+        color: white;
+    }
+
+    h1 {
+        color: white
+    }
+
+    #rules-content {
+        z-index: 10;
+        position: fixed;
+        left: 2em;
+        top: 0;
+        height: 100%;
+        float: left;
+    }
+
+    .rule {
+        display: flex;
+        flex-direction: row;
+        gap: 1em;
+        align-items: center;
+        padding: 0.5em 0.5em 0.5em 0.5em;
+
+        .indicator {
+            background-image: url('../images/rules/indicator.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 5ex;
+            width: 5ex;
+        }
+    }
+
+    #rules-character {
+        background-image: url('../images/rules/character.png');
+        height: 40em;
+        width: 40em;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: fixed;
+        bottom: 0;
+        float: right;
+        right: -2em;
+        z-index: 10;
+    }
 }
 
 #welcome-body {
@@ -31,6 +106,12 @@ body {
     bottom: 15vh;
     position: fixed;
 }
+
+h1 {
+    font-family: 'Fondamento', cursive;
+    font-size: 40px;
+}
+
 /* Button HearthStone Base
 –––––––––––––––––––––––––––––––––––––––––––––––––––– */
 .hs-wrapper {
@@ -51,7 +132,8 @@ body {
 }
 
 .hs-text {
-    display: table-cell; width: 100%;
+    display: table-cell;
+    width: 100%;
     vertical-align: middle;
     padding: 9px 24px;
     padding: 0.6rem 1.5rem;
@@ -63,7 +145,7 @@ body {
     letter-spacing: 2px;
 }
 
-.hs-border{
+.hs-border {
     display: table;
     padding: 3px;
     border-radius: 2px;
@@ -89,40 +171,41 @@ body {
 .hs-wrapper.classic {
     background-color: #c1b3b0;
     background: linear-gradient(to bottom,
-        #c1b3b0,
-        #c1b3b0 9%,
-        #4a3424 93%,
-        #1c140d);
+            #c1b3b0,
+            #c1b3b0 9%,
+            #4a3424 93%,
+            #1c140d);
     border-top: 2px solid #AD9A90;
     border-bottom: 2px solid #1c140d;
 }
+
 .hs-button.classic {
     background: linear-gradient(to bottom,
-        #6f5742,
-        #81615d);
+            #6f5742,
+            #81615d);
 }
 
 .hs-text.classic {
     background: radial-gradient(circle,
-        #bc22c7 25%,
-        #7c1693 75%,
-        #5c1096);
+            #bc22c7 25%,
+            #7c1693 75%,
+            #5c1096);
 }
 
 .hs-border.classic {
     background-color: #BC22C7;
     box-shadow: 0px 2px 6px 0px #331e0b;
     background: linear-gradient(to bottom,
-        #f756fe,
-        #c84bd6 5%,
-        #7305ae 59%,
-        #661f91);  
+            #f756fe,
+            #c84bd6 5%,
+            #7305ae 59%,
+            #661f91);
 }
 
 .hs-border:hover .hs-text.classic {
     background: radial-gradient(circle,
-        #e235ee 22%,
-        #981cb4);
+            #e235ee 22%,
+            #981cb4);
 }
 
 
@@ -131,41 +214,41 @@ body {
 .hs-wrapper.green {
     background-color: #d8be52;
     background: linear-gradient(to bottom,
-        #d8be52, #a77d33 9%,
-        #5f3f1d 93%,
-        #1c140d);
+            #d8be52, #a77d33 9%,
+            #5f3f1d 93%,
+            #1c140d);
     border-top: 2px solid #d8be52;
-    border-bottom: 2px solid #1c140d; 
+    border-bottom: 2px solid #1c140d;
 }
 
 .hs-button.green {
     background: linear-gradient(to bottom,
-        #6f5742,
-        #81615d);
+            #6f5742,
+            #81615d);
 }
 
 .hs-text.green {
     background: radial-gradient(circle,
-        #05c4b2 25%,
-        #009688 75%,
-        #015f57);
+            #05c4b2 25%,
+            #009688 75%,
+            #015f57);
 }
 
 .hs-border.green {
     background-color: #009688;
     box-shadow: 0px 2px 6px 0px #014640;
     background: linear-gradient(to bottom,
-        #18e9d5,
-        #13bcab 5%,
-        #015f57 59%,
-        #014640);
+            #18e9d5,
+            #13bcab 5%,
+            #015f57 59%,
+            #014640);
 }
 
 .hs-border:hover .hs-text.green {
-	background: radial-gradient(circle,
-        #18e9d5 22%,
-        #05a193 83%,
-        #028277);
+    background: radial-gradient(circle,
+            #18e9d5 22%,
+            #05a193 83%,
+            #028277);
 }
 
 
@@ -174,42 +257,42 @@ body {
 .hs-wrapper.silver {
     background-color: #d8be52;
     background: linear-gradient(to bottom,
-        #d8be52,
-        #a77d33 9%,
-        #5f3f1d 93%,
-        #1c140d);
+            #d8be52,
+            #a77d33 9%,
+            #5f3f1d 93%,
+            #1c140d);
     border-top: 2px solid #d8be52;
     border-bottom: 2px solid #1c140d;
 }
 
 .hs-button.silver {
     background: linear-gradient(to bottom,
-        #6f5742,
-        #81615d);
+            #6f5742,
+            #81615d);
 }
 
 .hs-text.silver {
     background: radial-gradient(circle,
-        #b6c2dd 25%,
-        #838da5 75%,
-        #43506e);
+            #b6c2dd 25%,
+            #838da5 75%,
+            #43506e);
 }
 
 .hs-border.silver {
     background-color: #a1b9e8;
     box-shadow: 0px 2px 6px 0px #3a4663;
     background: linear-gradient(to bottom,
-        #bfcce6,
-        #a1b9e8 5%,
-        #43506e 59%,
-        #3a4663);
+            #bfcce6,
+            #a1b9e8 5%,
+            #43506e 59%,
+            #3a4663);
 }
 
 .hs-border:hover .hs-text.silver {
     background: radial-gradient(circle,
-        #cfdbf5 22%,
-        #a3afcc 83%,
-        #697da9);
+            #cfdbf5 22%,
+            #a3afcc 83%,
+            #697da9);
 }
 
 
@@ -218,40 +301,40 @@ body {
 .hs-wrapper.gold {
     background-color: #d8be52;
     background: linear-gradient(to bottom,
-        #d8be52,
-        #a77d33 9%,
-        #5f3f1d 93%,
-        #1c140d);
+            #d8be52,
+            #a77d33 9%,
+            #5f3f1d 93%,
+            #1c140d);
     border-top: 2px solid #d8be52;
     border-bottom: 2px solid #1c140d;
 }
 
 .hs-button.gold {
     background: linear-gradient(to bottom,
-        #6f5742,
-        #81615d);
+            #6f5742,
+            #81615d);
 }
 
 .hs-text.gold {
     background: radial-gradient(circle,
-        #edca37 25%,
-        #a77d33 75%,
-        #5f3f1d);
+            #edca37 25%,
+            #a77d33 75%,
+            #5f3f1d);
 }
 
 .hs-border.gold {
     background-color: #a77d33;
     box-shadow: 0px 2px 6px 0px #362c26;
     background: linear-gradient(to bottom,
-        #d8be52,
-        #d5b631 5%,
-        #5f3f1d 59%,
-        #362c26);
+            #d8be52,
+            #d5b631 5%,
+            #5f3f1d 59%,
+            #362c26);
 }
 
-.hs-border:hover .hs-text.gold{
+.hs-border:hover .hs-text.gold {
     background: radial-gradient(circle,
-        #fed83b 22%,
-        #dba23e 83%,
-        #9d6224);
+            #fed83b 22%,
+            #dba23e 83%,
+            #9d6224);
 }
