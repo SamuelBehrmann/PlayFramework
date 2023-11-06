@@ -2,3 +2,6 @@
 .vscode
 target
 .bloop
+.idea
+logs/
+.bsp
