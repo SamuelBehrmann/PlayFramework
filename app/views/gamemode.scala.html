@@ -2,47 +2,40 @@
 @import helper._
 
 @main("Welcome to HearthstoneMini") {
-    <html lang="en">
-        <head>
-            <title>Welcome to HearthstoneMini</title>
-            <link rel="icon" type="image/png" href="images/Hearthstone-Icon (1).png">
-        </head>
-        <body>
+<body class="gamemode-body body">
+    <div class="bg-image" id="bg-image"></div>
+    <form class="content" action="/initGame" method="post" id="gamemodeForm">
+        <div class="header">
             <h1>Welcome to HearthstoneMini</h1>
-            <h2>Choose the Gamemode!</h2>
-            <form action="/initGame" method="post" id="gamemodeForm">
-                <table>
-                    <tr>
-                        <td>PlayerName1:</td>
-                        <td><input type="input" id="playerName1" name="playerName1"></td>
-                    </tr>
-                    <tr>
-                        <td>PlayerName2:</td>
-                        <td><input type="input" id="playerName2" name="playerName2"></td>
-                    </tr>
-                    <tr>
-                        <td>Normal:</td>
-                        <td><input type="radio" id="normal" name="gamemode" value="1"></td>
-                    </tr>
-                    <tr>
-                        <td>Hardcore:</td>
-                        <td><input type="radio" id="hardcore" name="gamemode" value="2"></td>
-                    </tr>
-                    <tr>
-                        <td>Debug:</td>
-                        <td><input type="radio" id="debug" name="gamemode" value="3"></td>
-                    </tr>
-                </table>
-                <input type="submit" id="submit_button" value="Starten">
-            </form>
-        </body>
-    </html>
+        </div>
+        <div id="names">
+            <div class="player">
+                <span>Player1:</span>
+                <input class="input hs-border silver" type="input" id="playerName1" name="playerName1">
+            </div>
+            <div class="player">
+                <span>Player2:</span>
+                <input class="input hs-border silver" type="input" id="playerName2" name="playerName2">
+            </div>
+        </div>
+        <div class="modes">
+            <label>
+                <span>Normal:</span>
+                <input class="radio" type="radio" id="normal" name="gamemode" value="1">
+                <img src="../assets/images/rules/indicator.webp" alt="" class="indicator">
+            </label>
+            <label>
+                <span>Hardcore:</span>
+                <input class="radio" type="radio" id="hardcore" name="gamemode" value="2">
+                <img src="../assets/images/rules/indicator.webp" alt="" class="indicator">
+            </label>
+            <label>
+                <span>Debug:</span>
+                <input class="radio" type="radio" id="debug" name="gamemode" value="3">
+                <img src="../assets/images/rules/indicator.webp" alt="" class="indicator">
+            </label>
+        </div>
+        @components.button("Starten", "submitModes()", "classic")
+    </form>
+</body>
 }
-
-
-
-
-
-
-
-

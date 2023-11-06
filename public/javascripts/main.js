@@ -1,3 +1,6 @@
+function submitModes() {
+    document.getElementById('gamemodeForm').submit();
+}
 
 $(document).ajaxStop(function(){
     window.location.reload();
