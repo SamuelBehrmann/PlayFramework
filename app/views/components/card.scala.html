@@ -1,18 +1,7 @@
 @(card: hearthstoneMini.model.cardComponent.CardInterface)
 
+<div class="card">
 <div>
-    <table>
-        <tr>
-            <td>Name: @card.name</td>
-        </tr>
-        <tr>
-            <td>ManaCost: @card.manaCost</td>
-        </tr>
-        <tr>
-            <td>Attack: @card.attValue</td>
-        </tr>
-        <tr>
-            <td>Defense: @card.defenseValue</td>
-        </tr>
-    </table>
+    <img src="https://art.hearthstonejson.com/v1/render/latest/deDE/512x/@{card.id}.png" id="card-image">
+</div>
 </div>

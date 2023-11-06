@@ -1,7 +1,7 @@
-@(content: String, ref: String, variant: String)
+@(content: String, onClick: String, variant: String)
 
 <div class="hs-wrapper @variant">
-    <a class='hs-button @variant' onclick="window.location.href='@ref'">
+    <a class='hs-button @variant' onclick="@onClick">
       <span class='hs-border @variant'>
         <span class='hs-text @variant'>
           @content

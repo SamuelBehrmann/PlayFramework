@@ -1,35 +1,25 @@
 @(msg: String)(controller: hearthstoneMini.controller.component.ControllerInterface)
-
-@field = @{controller.field}
+@field = @{
+    controller.field
+}
 
 
 @main("HearthstoneMini") {
-<div class="gamecontainer">
-    <div class="game">
-        @components.field(field)
-        <h2>@msg</h2>
-        <button onclick="revealFields('placeCardForm')">Place card</button>
-        <button onclick="window.location.href='/endTurn'">End turn</button>
-        <button onclick="revealFields('attackForm')">Attack</button>
-        <button onclick="revealFields('directAttackForm')">Direct attack</button>
-        <button onclick="window.location.href='/exitGame'">Exit game</button>
-        <button onclick="window.location.href='/drawCard'">Draw card</button>
-        <button onclick="window.location.href='/undo'">undo</button>
-        <button onclick="window.location.href='/redo'">redo</button>
-        <div id="placeCardForm" style="display: none;">
-            <form action="/placeCard" method="post">
-                <table>
-                    <tr>
-                        <td>Hand slot index:</td>
-                        <td><input type="input" id="handSlotIndex" name="handSlotIndex"></td>
-                    </tr>
-                    <tr>
-                        <td>Own Field index:</td>
-                        <td><input type="input" id="fieldIndex" name="fieldIndex"></td>
-                    </tr>
-                </table>
-                <input type="submit" id="submit_button" value="Send">
-            </form>
+    <body id="game-body">
+        <div class="bg-image"></div>
+        <div class="gamecontainer">
+            @components.player(field.getPlayerById(1))
+            @components.player(field.getPlayerById(2))
+            <script src="@routes.Assets.versioned(" javascripts/main.js")" type="text/javascript"></script>
+        </div>
+        <div class="buttonsGameField hs-wrapper gameButtons">
+            @components.button("Draw Card", "javascript:window.location.href = '/drawCard';", "classic")
+            @components.button("Attack", "window.location.href = '/attack'", "classic")
+            @components.button("Direct Attack", "window.location.href = '/directAttack'", "classic")
+            @components.button("End turn", "window.location.href = '/endTurn'", "classic")
+            @components.button("Undo", "window.location.href = '/undo'", "classic")
+            @components.button("Redo", "window.location.href = '/redo'", "classic")
+            @components.button("Exit", "javascript:window.location.href = '/exitGame'", "classic")
         </div>
         <div id="attackForm" style="display: none;">
             <form action="/attack" method="post">
@@ -57,17 +47,7 @@
                 <input type="submit" id="submit_button" value="Send">
             </form>
         </div>
-        <script src="@routes.Assets.versioned(" javascripts/main.js")" type="text/javascript"></script>
-        <script>
-            function revealFields(id) {
-                var x = document.getElementById(id);
-                if (x.style.display === "none") {
-                    x.style.display = "block";
-                } else {
-                    x.style.display = "none";
-                }
-            }
-        </script>
-    </div>
-</div>
+    </body>
 }
+
+
