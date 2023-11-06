@@ -6,6 +6,7 @@ import play.api.mvc._
 import hearthstoneMini.model.Move
 import hearthstoneMini.controller.GameState
 import hearthstoneMini.controller.Strategy
+import play.api.routing.JavaScriptReverseRouter
 
 @Singleton
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
@@ -20,6 +21,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def game = Action { implicit request: Request[AnyContent] =>
+    println(controller.errorMsg.getOrElse("Success"))
     Ok(controller.gameState match {
                 case GameState.CHOOSEMODE => views.html.gamemode()
                 case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(controller = controller)
@@ -87,5 +89,13 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     
     implicit request: Request[AnyContent] =>
     Redirect("/hearthstoneMini")
+  }
+
+
+  def jsRoutes = Action { implicit request =>
+    Ok(
+      JavaScriptReverseRouter("jsRoutes")(
+        routes.javascript.HomeController.placeCard,
+      )).as("text/javascript")
   }
 }
