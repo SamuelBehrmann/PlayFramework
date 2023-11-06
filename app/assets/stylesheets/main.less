@@ -15,6 +15,8 @@ html {
     height: 100%;
     box-sizing: border-box;
     position: fixed;
+
+    //user-select: none;
 }
 
 #rules-body {
@@ -130,6 +132,8 @@ h1 {
   text-align: center;
   border-radius: 2px;
   border: solid 3px #795548;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .hs-text {
@@ -144,15 +148,16 @@ h1 {
     font-size: 20px;
     font-size: 1.25rem;
     letter-spacing: 2px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .hs-border {
   display: table;
   padding: 3px;
   border-radius: 2px;
-  height: 35px;
   min-height: 35px;
-  width: 97%;
+  width: 100%;
   /* Font style */
   text-transform: uppercase;
   font-family: 'Fondamento', cursive;
@@ -164,6 +169,8 @@ h1 {
   line-height: 1;
   letter-spacing: 1px;
   text-align: center;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 
@@ -351,16 +358,27 @@ h1 {
   max-height: 100vh;
   margin: 0;
   background-color: black;
+
+  .fieldbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .slot {
+      aspect-ratio: 0.66;
+      height: 150px;
+    }
+  }
+
 }
 
 .gamecontainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
   position: fixed;
-  padding-bottom: 50px;
-  padding-top: 50px;
+  padding-bottom: 55px;
+  padding-top: 55px;
   box-sizing: border-box;
 }
 
@@ -377,20 +395,32 @@ h1 {
 }
 
 .card {
-  height: 200px;
+  height: 150px;
+  aspect-ratio: 0.66;
   position: relative;
   border-radius: 8px;
   margin-right: -50px;
+  box-sizing: border-box;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 
   #card-image {
-    height: 200px;
+    height: 150px;
+    aspect-ratio: 0.66;
     z-index: 5;
   }
 }
 
 .card:hover {
-  transform: scale(1.5);
+  transform: scale(1.7);
   z-index: 10;
+  position: relative;
+  bottom: 3em;
 }
 
 .player {
@@ -413,6 +443,23 @@ h1 {
   height: auto;
   display: flex;
   flex-direction: row;
-  z-index: 3;
+  z-index: 5;
   justify-content: center;
+  align-items: end;
+}
+
+.buttonsGameField {
+  width: 100vw;
+  position: fixed;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.hs-wrapper.gameButtons {
+  transform: scale(0.65);
+  flex-grow: 1;
+  flex-shrink: 1;
+  gap: 4px;
+  z-index: 2;
 }
