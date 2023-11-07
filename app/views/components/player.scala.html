@@ -1,12 +1,14 @@
-@(player: hearthstoneMini.model.playerComponent.PlayerInterface)
+@(
+    player: hearthstoneMini.model.playerComponent.PlayerInterface,
+    isActive: Boolean)
 
 <div class="player@{
     player.id
 } player" style="height: 50vh">
-@if(player.id == 1) {
+@if(!isActive) {
     <div class="hand" style="height: 25vh">
     @for(index <- 0 until player.gamebar.hand.length) {
-        <div class="card" id="hand@index" aria-valuenow="@index">@components.card(player.gamebar.hand(index))</div>
+        <div class="card" id="hand@index" aria-valuenow="@index">@components.disabledCard()</div>
     }
     </div>
     <div class="fieldbar">
@@ -28,8 +30,9 @@
     </div>
     <div class="hand">
         @for(index <- 0 until player.gamebar.hand.length) {
-        <div class="card" id="hand@index" aria-valuenow="@index">@components.card(player.gamebar.hand(index))</div>
-    }
+            <div class="card hoverable" id="hand@index" aria-valuenow="@index">@components.card(player.gamebar.hand(index))</div>
+       
+        }
     </div>
 }
 
