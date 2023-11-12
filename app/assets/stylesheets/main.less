@@ -137,14 +137,26 @@ html {
     height: 80%;
   }
 
-  #names {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: center;
-    gap: 3em;
+  @media only screen and (max-device-width: 600px) {
+    #names {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3em;
+    }
   }
 
+  @media only screen and (min-device-width: 600px) {
+    #names {
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      justify-content: center;
+      gap: 3em;
+    }
+  }
+  
   .player {
     display: flex;
     flex-direction: column;
@@ -152,7 +164,7 @@ html {
   }
 
   .input {
-    width: 400px;
+    width: 25vw;
   }
 
   .modes {
