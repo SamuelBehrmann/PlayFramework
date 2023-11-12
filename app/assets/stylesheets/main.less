@@ -648,3 +648,41 @@ h1 {
     z-index: 2;
   }
 }
+
+// Navigation Bar
+#topheader .container-fluid {
+  width: 100%;
+  z-index: 1000;
+}
+#topheader ul.navbar-nav.horizontal-center {
+  //background-color: red;
+  list-style-type: none;
+  display: inline-block;
+  justify-content: center;
+}
+
+#topheader .navbar-nav li {
+  float: left;
+}
+
+#topheader .navbar-nav li a {
+  text-align: center;
+  padding: 10px;
+}
+
+#topheader .navbar-nav li > a {
+  text-transform: capitalize;
+  color: #333;
+  transition: background-color .2s, color .2s;
+
+  &:hover,
+  &:focus {
+    background-color: #333;
+    color: #fff;
+  }
+}
+
+#topheader .navbar-nav li.active > a {
+  background-color: #333;
+  color: #fff;
+}
