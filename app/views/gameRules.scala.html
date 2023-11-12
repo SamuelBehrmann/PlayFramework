@@ -1,34 +1,36 @@
 @import scala._
 
-@rules = @{
-List("Each player starts with the same amount of HP and Mana.",
-"Each round always begins on the same game board.",
-"Each player starts with 5 Cards on his hand and 30 in the deck.",
-"Play cards from your hand to summon a creature.",
-"Attack the enemies creatures or the player directly to deal damage.",
-"Use your mana reserves to play cards.",
-"The mana pool will be increased by one, after every full turn",
-"Victory condition: enemy Healpoints are 0"
-)
+    @rules = @{
+    List("Each player starts with the same amount of HP and Mana.",
+        "Each round always begins on the same game board.",
+        "Each player starts with 5 Cards on his hand and 30 in the deck.",
+        "Play cards from your hand to summon a creature.",
+        "Attack the enemies creatures or the player directly to deal damage.",
+        "Use your mana reserves to play cards.",
+        "The mana pool will be increased by one, after every full turn",
+        "Victory condition: enemy Healpoints are 0"
+    )
 }
 
-@listElement(content: String) = {
-<div class="rule">
-    <div class="indicator"></div>
-    <span>@content</span>
-</div>
+    @listElement(content: String) = {
+    <div class="rule">
+        <div class="indicator"></div>
+        <span>@content</span>
+    </div>
 }
 
 @main("Game rules for HearthstoneMini") {
-<body id="rules-body">
-    <div id="background"></div>
-    <div id="rules-character"></div>
-    <div id="rules-content">
-        <h1>HearthstoneMini Game Rules</h1>
-        <div>
-            @for(rule <- rules) { @listElement(rule) } 
+    <body id="rules-body">
+        <div id="background"></div>
+        <div id="rules-character"></div>
+        <div id="rules-content">
+            <h1>HearthstoneMini Game Rules</h1>
+            <div>
+            @for(rule <- rules) {
+                @listElement(rule)
+            }
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 
 }
