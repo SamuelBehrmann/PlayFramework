@@ -1,12 +1,20 @@
-@()
-
 @main("Welcome to HearthstoneMini") {
-<body id="welcome-body">
-  <div id="welcome-background">
-    <div class="button-panel">
-      @components.button("Rules", "window.location.href = '/gameRules'", "classic")
-      @components.button("Play Now", "window.location.href = '/hearthstoneMini'", "gold")
-    </div>
+  <div class="navbar">
+    <div id="navbar-container"></div>
   </div>
-</body>
+  <body id="welcome-body">
+    <div id="welcome-background">
+      <div class="button-panel">
+        @components.button("Rules", "window.location.href = '/gameRules'", "classic")
+        @components.button("Play Now", "window.location.href = '/hearthstoneMini'", "gold")
+      </div>
+    </div>
+    <script>
+            fetch('views/components/navbar.html') 
+                    .then(response => response.text())
+                    .then(data => {
+                      document.getElementById('navbar-container').innerHTML = data;
+                    });
+    </script>
+  </body>
 }
