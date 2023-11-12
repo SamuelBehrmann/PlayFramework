@@ -1,13 +1,4 @@
-#welcome-background {
-  background-image: url('../images/background.webp');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  height: 100vh;
-  width: 100vw;
-  z-index: 0;
-}
+@mobileBreakpoint: 600px;
 
 body,
 html {
@@ -137,7 +128,7 @@ html {
     height: 80%;
   }
 
-  @media only screen and (max-device-width: 600px) {
+  @media only screen and (max-device-width: @mobileBreakpoint) {
     #names {
      display: flex;
      width: 100%;
@@ -147,7 +138,7 @@ html {
     }
   }
 
-  @media only screen and (min-device-width: 600px) {
+  @media only screen and (min-device-width: @mobileBreakpoint) {
     #names {
       display: flex;
       width: 100%;
@@ -209,17 +200,44 @@ html {
 #welcome-body {
   margin: 0;
   position: fixed;
-}
 
-.button-panel {
-  display: flex;
-  width: 100vw;
-  flex-direction: row;
-  gap: 1em 1em;
-  justify-content: center;
-  z-index: 10;
-  bottom: 15vh;
-  position: fixed;
+  @media only screen and (max-device-width: @mobileBreakpoint) {
+    .button-panel {
+      display: flex;
+      width: 100vw;
+      flex-direction: column;
+      gap: 1em 1em;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      bottom: 15vh;
+      position: fixed;
+    }
+  }
+
+  @media only screen and (min-device-width: @mobileBreakpoint) {
+    .button-panel {
+      display: flex;
+      width: 100vw;
+      flex-direction: row;
+      gap: 1em 1em;
+      justify-content: center;
+      z-index: 10;
+      bottom: 15vh;
+      position: fixed;
+    }
+  }
+
+  #welcome-background {
+    background-image: url('../images/background.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    z-index: 0;
+  }
 }
 
 h1 {
