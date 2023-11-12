@@ -58,3 +58,18 @@ function drop(event) {
 
 }
 
+// document.addEventListener('DOMContentLoaded', function() {
+//     var img = new Image();
+//     img.onload = function(){
+//         var gameContainer = document.getElementById("gamecontainer");
+//         gameContainer.style.width = this.width + "px";
+//         gameContainer.style.maxWidthwidth = this.width+ "px";
+//         gameContainer.style.height = this.height+ "px";
+//         gameContainer.style.maxHeight = this.height+ "px";
+//         console.log("Workin")
+
+//     };
+//     img.src = "./assets/images/Content/background.png";
+    
+//   });
+
