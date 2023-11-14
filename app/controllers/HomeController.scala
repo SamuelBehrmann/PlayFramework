@@ -21,7 +21,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def game = Action { implicit request: Request[AnyContent] =>
-    println(controller.errorMsg.getOrElse("Success"))
     Ok(controller.gameState match {
                 case GameState.CHOOSEMODE => views.html.gamemode()
                 case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(controller = controller)
@@ -96,6 +95,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(
       JavaScriptReverseRouter("jsRoutes")(
         routes.javascript.HomeController.placeCard,
+        routes.javascript.HomeController.attack,
+        routes.javascript.HomeController.directAttack,
       )).as("text/javascript")
   }
 }
