@@ -56,8 +56,48 @@ function dragLeave() {
 function drop(event) {
     event.preventDefault();
     const data = event.dataTransfer.getData('text/plain');
-    console.log(`hand:  / field: ${event.target.getAttribute('aria-valuenow')}`);
-    jsRoutes.controllers.HomeController.placeCard().ajax({method: 'POST' ,data: {"fieldIndex": event.target.getAttribute('aria-valuenow'), "handSlotIndex": dragged.getAttribute('aria-valuenow')}})
+    console.log(this)
+    console.log(dragged)
+    var sourceIndex = dragged.getAttribute('aria-valuenow');
+    var targetIndex = this.getAttribute('aria-valuenow')
+
+    var currentElement = dragged;
+
+    var isHandSource = false;
+    var isFieldSource= false;
+    var isFieldTarget = false;
+    var isPlayerTarget = false;
+
+    while (currentElement !== null) {
+        if (currentElement.classList && currentElement.classList.contains('hand-active')) {
+            isHandSource = true;
+            break;  
+        } else if (currentElement.classList && currentElement.classList.contains('fieldbar')){
+            isFieldSource = true;
+        }
+        currentElement = currentElement.parentElement;
+    }
+
+    currentElement = event.target;
+    while (currentElement !== null) {
+        if (currentElement.classList && currentElement.classList.contains('fieldbar')) {
+            isFieldTarget = true;
+            break;  
+        } else {
+            isPlayerTarget = true;
+        }
+        currentElement = currentElement.parentElement;
+    }
+
+    if (isHandSource) {
+        console.log("placeCard")
+        jsRoutes.controllers.HomeController.placeCard().ajax({method: 'POST' ,data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex}})
+    } else if (isFieldSource && isFieldTarget) {
+        console.log("attack")
+        jsRoutes.controllers.HomeController.attack().ajax({method: 'POST' ,data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex}})
+    } else {
+        console.log("directAttack")
+    }
 
     this.classList.remove('drag-over');
 }
@@ -66,19 +106,3 @@ $( '#topheader .navbar-nav a' ).on( 'click', function () {
     $( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
     $( this ).parent( 'li' ).addClass( 'active' );
 });
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     var img = new Image();
-//     img.onload = function(){
-//         var gameContainer = document.getElementById("gamecontainer");
-//         gameContainer.style.width = this.width + "px";
-//         gameContainer.style.maxWidthwidth = this.width+ "px";
-//         gameContainer.style.height = this.height+ "px";
-//         gameContainer.style.maxHeight = this.height+ "px";
-//         console.log("Workin")
-
-//     };
-//     img.src = "./assets/images/Content/background.png";
-    
-//   });
-
