@@ -8,7 +8,6 @@ $(document).ajaxStop(function(){
 
 const cards = document.querySelectorAll('.card');
 const slots = document.querySelectorAll('.slot');
-
 let dragged;
 
 // Event Listeners für das ziehbare Element
@@ -27,6 +26,12 @@ slots.forEach(slot => {
 
 function dragStart(event) {
     dragged = this;
+    var doc = document.createElement('div');
+
+    doc.innerHTML = event.target.querySelectorAll('#card-image')[0].outerHTML;
+    doc.setAttribute("style","width:10px");
+    
+    event.dataTransfer.setDragImage(doc.firstChild, event.target.offsetWidth / 2, event.target.offsetWidth / 2);
     event.dataTransfer.setData('text/plain', event.target.getAttribute('aria-valuenow'));
     this.classList.add('dragging');
 }
