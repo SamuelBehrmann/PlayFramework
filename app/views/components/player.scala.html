@@ -8,12 +8,14 @@
 @if(!isActive) {
     <div class="hand" style="height: 25vh">
     @for(index <- 0 until player.gamebar.hand.length) {
-        <div class="card" id="hand@index" aria-valuenow="@index">@components.disabledCard()</div>
+        <div class="card card-size">
+           @components.disabledCard()
+        </div>
     }
     </div>
     <div class="fieldbar">
         @for(index <- 0 until player.fieldbar.cardArea.row.length) {
-            <div class="slot" id="field@index" aria-valuenow="@index">@player.fieldbar.cardArea.row(index).fold({
+            <div class="slot">@player.fieldbar.cardArea.row(index).fold({
                     components.emptyCard()
                 })((card) => components.card(card))
             </div>
@@ -28,13 +30,15 @@
             </div>
         }
     </div>
-    <div class="hand">
+    <div class="hand-active">
         @for(index <- 0 until player.gamebar.hand.length) {
-            <div class="card hoverable" id="hand@index" aria-valuenow="@index">@components.card(player.gamebar.hand(index))</div>
-       
+            
+                <div class="card"draggable="true" id="hand@index" aria-valuenow="@index" >
+                    <div class="card-face">@components.card(player.gamebar.hand(index))</div> 
+                </div>
+           
         }
     </div>
 }
-
 </div>
 

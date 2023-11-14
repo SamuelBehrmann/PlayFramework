@@ -18,21 +18,21 @@
                 </div>
             </nav>
         </div>
-        <div class="bg-image"></div>
-        <div style="color: white; position: absolute; bottom: 50%; left: 0px;">@msg</div>
-        <div class="gamecontainer">
+        <div class="bg-image" id="bg-image"></div>
+        <div style="color: white; position: absolute; bottom: 3em; left: 10px;">@msg</div>
+        <div class="gamecontainer" id="gamecontainer">
             @for(index <- 0 until field.players.length) {
                 @components.player(field.players(index), index == 0)
             }
-        </div>
-        <div class="buttonsGameField hs-wrapper gameButtons">
-            @components.button("Draw Card", "javascript:window.location.href = '/drawCard';", "classic")
-            @components.button("Attack", "window.location.href = '/attack'", "classic")
-            @components.button("Direct Attack", "window.location.href = '/directAttack'", "classic")
-            @components.button("End turn", "window.location.href = '/endTurn'", "classic")
-            @components.button("Undo", "window.location.href = '/undo'", "classic")
-            @components.button("Redo", "window.location.href = '/redo'", "classic")
-            @components.button("Exit", "javascript:window.location.href = '/exitGame'", "classic")
+            <div class="buttonsGameField gameButtons">
+                @components.button("Draw Card", "javascript:window.location.href = '/drawCard';", "classic")
+                @components.button("Attack", "window.location.href = '/attack'", "classic")
+                @components.button("Direct Attack", "window.location.href = '/directAttack'", "classic")
+                @components.button("End turn", "window.location.href = '/endTurn'", "classic")
+                @components.button("Undo", "window.location.href = '/undo'", "classic")
+                @components.button("Redo", "window.location.href = '/redo'", "classic")
+                @components.button("Exit", "javascript:window.location.href = '/exitGame'", "classic")
+            </div>
         </div>
         <div id="attackForm" style="display: none;">
             <form action="/attack" method="post">
