@@ -60,8 +60,12 @@ function drop(event) {
     jsRoutes.controllers.HomeController.placeCard().ajax({method: 'POST' ,data: {"fieldIndex": event.target.getAttribute('aria-valuenow'), "handSlotIndex": dragged.getAttribute('aria-valuenow')}})
 
     this.classList.remove('drag-over');
-
 }
+
+$( '#topheader .navbar-nav a' ).on( 'click', function () {
+    $( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
+    $( this ).parent( 'li' ).addClass( 'active' );
+});
 
 // document.addEventListener('DOMContentLoaded', function() {
 //     var img = new Image();
