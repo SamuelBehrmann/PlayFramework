@@ -8,7 +8,6 @@ $(document).ajaxStop(function(){
 
 const cards = document.querySelectorAll('.card');
 const slots = document.querySelectorAll('.slot');
-
 let dragged;
 
 // Event Listeners für das ziehbare Element
@@ -27,6 +26,12 @@ slots.forEach(slot => {
 
 function dragStart(event) {
     dragged = this;
+    var doc = document.createElement('div');
+
+    doc.innerHTML = event.target.querySelectorAll('#card-image')[0].outerHTML;
+    doc.setAttribute("style","width:10px");
+    
+    event.dataTransfer.setDragImage(doc.firstChild, event.target.offsetWidth / 2, event.target.offsetWidth / 2);
     event.dataTransfer.setData('text/plain', event.target.getAttribute('aria-valuenow'));
     this.classList.add('dragging');
 }
@@ -55,6 +60,25 @@ function drop(event) {
     jsRoutes.controllers.HomeController.placeCard().ajax({method: 'POST' ,data: {"fieldIndex": event.target.getAttribute('aria-valuenow'), "handSlotIndex": dragged.getAttribute('aria-valuenow')}})
 
     this.classList.remove('drag-over');
-
 }
+
+$( '#topheader .navbar-nav a' ).on( 'click', function () {
+    $( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
+    $( this ).parent( 'li' ).addClass( 'active' );
+});
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     var img = new Image();
+//     img.onload = function(){
+//         var gameContainer = document.getElementById("gamecontainer");
+//         gameContainer.style.width = this.width + "px";
+//         gameContainer.style.maxWidthwidth = this.width+ "px";
+//         gameContainer.style.height = this.height+ "px";
+//         gameContainer.style.maxHeight = this.height+ "px";
+//         console.log("Workin")
+
+//     };
+//     img.src = "./assets/images/Content/background.png";
+    
+//   });
 
