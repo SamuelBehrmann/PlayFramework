@@ -8,6 +8,7 @@ $(document).ajaxStop(function(){
 
 const cards = document.querySelectorAll('.card');
 const slots = document.querySelectorAll('.slot');
+const chars = document.querySelectorAll('.char')
 let dragged;
 
 // Event Listeners für das ziehbare Element
@@ -22,6 +23,13 @@ slots.forEach(slot => {
     slot.addEventListener('dragover', dragOver);
     slot.addEventListener('dragleave', dragLeave);
     slot.addEventListener('drop', drop);
+});
+
+chars.forEach(char => {
+    char.addEventListener('dragenter', dragEnter);
+    char.addEventListener('dragleave', dragLeave);
+    char.addEventListener('dragover', dragOver);
+    char.addEventListener('drop', drop);
 });
 
 function dragStart(event) {
@@ -83,8 +91,9 @@ function drop(event) {
         if (currentElement.classList && currentElement.classList.contains('fieldbar')) {
             isFieldTarget = true;
             break;  
-        } else {
+        } else if (currentElement.classList && currentElement.classList.contains('char')) {
             isPlayerTarget = true;
+            break;
         }
         currentElement = currentElement.parentElement;
     }
@@ -97,6 +106,7 @@ function drop(event) {
         jsRoutes.controllers.HomeController.attack().ajax({method: 'POST' ,data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex}})
     } else {
         console.log("directAttack")
+        jsRoutes.controllers.HomeController.directAttack().ajax({method: 'POST' , data: {"activeFieldIndex": sourceIndex}})
     }
 
     this.classList.remove('drag-over');
