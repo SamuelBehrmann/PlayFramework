@@ -98,6 +98,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
         routes.javascript.HomeController.placeCard,
         routes.javascript.HomeController.attack,
         routes.javascript.HomeController.directAttack,
+        routes.javascript.HomeController.drawCard,
       )).as("text/javascript")
   }
 }

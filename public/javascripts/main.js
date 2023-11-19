@@ -1,3 +1,5 @@
+
+
 function submitModes() {
     document.getElementById('gamemodeForm').submit();
 }
@@ -116,3 +118,27 @@ $( '#topheader .navbar-nav a' ).on( 'click', function () {
     $( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
     $( this ).parent( 'li' ).addClass( 'active' );
 });
+
+//Karte ziehen
+function drawCard() {
+    jsRoutes.controllers.HomeController.drawCard().ajax({method: 'POST'});
+    window.location.reload();
+}
+
+// Deck bei Hover skalieren
+const deckElement = document.querySelector('.deckP2Background');
+deckElement.addEventListener('mouseover', () => {
+    deckElement.style.transform = 'scale(1.1)';
+});
+deckElement.addEventListener('mouseout', () => {
+    deckElement.style.transform = 'scale(1)';
+});
+
+
+
+
+
+
+
+
+
