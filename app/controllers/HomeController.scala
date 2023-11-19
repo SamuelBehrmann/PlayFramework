@@ -3,7 +3,7 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
-import hearthstoneMini.model.Move
+import hearthstoneMini.model.{Move => Move}
 import hearthstoneMini.controller.GameState
 import hearthstoneMini.controller.Strategy
 import play.api.routing.JavaScriptReverseRouter
@@ -46,7 +46,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def placeCard() = Action { 
     implicit request: Request[AnyContent] =>
-      controller.placeCard(hearthstoneMini.model.Move(handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt, fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt))
+      controller.placeCard(Move(handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt, fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt))
       Redirect("/hearthstoneMini")
   }
   def exitGame() = Action { 
@@ -69,12 +69,13 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
   def directAttack() = Action { 
     implicit request: Request[AnyContent] =>
-      controller.directAttack(hearthstoneMini.model.Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt))
+      controller.directAttack(Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt))
       Redirect("/hearthstoneMini")
+
   }
   def attack() = Action {
     implicit request: Request[AnyContent] =>
-      controller.attack(hearthstoneMini.model.Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt, fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt)) 
+      controller.attack(Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt, fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt)) 
       Redirect("/hearthstoneMini")
   }
   def undo() = Action { 

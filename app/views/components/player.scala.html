@@ -6,6 +6,11 @@
     player.id
 } player" style="height: 50vh">
 @if(!isActive) {
+    @if(player.id == 1) {
+        <img class="char inactive-char" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
+    } else {
+        <img class="char inactive-char" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
+    }
     <div class="hand" style="height: 25vh">
     @for(index <- 0 until player.gamebar.hand.length) {
         <div class="card card-size">
@@ -24,6 +29,11 @@
         }
     </div>
 } else {
+    @if(player.id == 1) {
+        <img class="char active-char" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
+    } else {
+        <img class="char active-char" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
+    }
     <div class="fieldbar">
         @for(index <- 0 until player.fieldbar.cardArea.row.length) {
             <div class="slot" draggable="true" id="field@index" aria-valuenow="@index">@if(player.fieldbar.cardArea.row(index).isDefined) {
