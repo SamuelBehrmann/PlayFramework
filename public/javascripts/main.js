@@ -1,3 +1,4 @@
+var gameAspectRatio = 1;
 
 function submitModes() {
     document.getElementById('gamemodeForm').submit();
@@ -121,7 +122,6 @@ $( '#topheader .navbar-nav a' ).on( 'click', function () {
 //Karte ziehen
 function drawCard() {
     jsRoutes.controllers.HomeController.drawCard().ajax({method: 'POST'});
-    // window.location.reload();
 }
 
 // Deck bei Hover skalieren
@@ -134,6 +134,39 @@ deckElement.addEventListener('mouseout', () => {
 });
 
 
+function calculateGameAspectRatio() {
+    var img = new Image();
+    img.onload = function(){
+       gameAspectRatio = this.width / this.height;
+       handleResize();
+    };
+    img.src = "./assets/images/Content/background.png";
+}
+
+function handleResize() {
+    var gameContainer = document.getElementById("gamecontainer");
+    screenAsRa = window.innerWidth / window.innerHeight;
+    if (screenAsRa > gameAspectRatio) {
+        gameContainer.style.width = window.innerHeight * gameAspectRatio + "px";
+        gameContainer.style.maxWidthwidth = window.innerHeight * gameAspectRatio + "px";
+        gameContainer.style.height = window.innerHeight + "px";
+        gameContainer.style.maxHeight = window.innerHeight + "px";
+        document.getElementById("center").style.flexDirection = "row";
+    } else {
+        gameContainer.style.width = window.innerWidth + "px";
+        gameContainer.style.maxWidthwidth = window.innerWidth + "px";
+        gameContainer.style.height = window.innerWidth / gameAspectRatio + "px";
+        gameContainer.style.maxHeight = window.innerWidth / gameAspectRatio + "px";
+        document.getElementById("center").style.flexDirection = "column";
+    }
+   
+  }
+
+window.addEventListener('resize', handleResize);
+
+document.addEventListener('DOMContentLoaded', function() {
+    calculateGameAspectRatio();
+});
 
 
 
