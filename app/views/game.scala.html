@@ -25,8 +25,10 @@
                 @for(index <- 0 until field.players.length) {
                     @components.player(field.players(index), index == 0)
                 }
-                <div class="buttonsGameField gameButtons">
+                <div class="endTurn">
                     @components.button("End turn", "window.location.href = '/endTurn'", "classic")
+                </div>
+                <div class="buttonsGameField gameButtons">
                     @components.button("Undo", "window.location.href = '/undo'", "classic")
                     @components.button("Redo", "window.location.href = '/redo'", "classic")
                     @components.button("Exit", "javascript:window.location.href = '/exitGame'", "classic")
