@@ -62,10 +62,9 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Redirect("/hearthstoneMini")
   }
   def drawCard() = Action { 
-    controller.drawCard()
-    
     implicit request: Request[AnyContent] =>
-    Redirect("/hearthstoneMini")
+      controller.drawCard()
+      Redirect("/hearthstoneMini")
   }
   def directAttack() = Action { 
     implicit request: Request[AnyContent] =>

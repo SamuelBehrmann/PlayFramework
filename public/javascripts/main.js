@@ -1,5 +1,4 @@
 
-
 function submitModes() {
     document.getElementById('gamemodeForm').submit();
 }
@@ -122,7 +121,7 @@ $( '#topheader .navbar-nav a' ).on( 'click', function () {
 //Karte ziehen
 function drawCard() {
     jsRoutes.controllers.HomeController.drawCard().ajax({method: 'POST'});
-    window.location.reload();
+    // window.location.reload();
 }
 
 // Deck bei Hover skalieren
