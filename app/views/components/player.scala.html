@@ -22,6 +22,10 @@
              }
             </div>
         }
+
+        <div class="slot deck" id="deckSlot">
+            <div class="card card-size deckP1Background"></div>
+        </div>
     </div>
 } else {
     <div class="fieldbar">
@@ -33,7 +37,14 @@
                 }
             </div>
         }
+
+        <div class="slot deck" id="deckSlot">
+            <div class="card-size deckP2Background" onclick="drawCard()">
+                <span id="remainingCards">@player.gamebar.deck.length</span>
+            </div>
+        </div>
     </div>
+
     <div class="hand-active">
         @for(index <- 0 until player.gamebar.hand.length) {
                 <div class="card" draggable="true" id="hand@index" aria-valuenow="@index" >
