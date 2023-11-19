@@ -5,3 +5,5 @@ target
 .idea
 logs/
 .bsp
+project/project/.bloop/
+project/.bloop/
