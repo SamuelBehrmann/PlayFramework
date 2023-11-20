@@ -1,3 +1,4 @@
+let activePlayer = 1;
 
 
 function submitModes() {
@@ -44,6 +45,8 @@ function dragStart(event) {
     event.dataTransfer.setDragImage(doc.firstChild, event.target.offsetWidth / 2, event.target.offsetWidth / 2);
     event.dataTransfer.setData('text/plain', event.target.getAttribute('aria-valuenow'));
     this.classList.add('dragging');
+
+    highlightSlots(activePlayer)
 }
 
 function dragEnd() {
@@ -113,6 +116,29 @@ function drop(event) {
 
     this.classList.remove('drag-over');
 }
+
+function highlightSlots(activePlayer) {
+    const playerFieldbar = document.querySelector(`.player${activePlayer} .fieldbar`);
+    const fieldSlots = playerFieldbar.querySelectorAll('.slot');
+    console.log(fieldSlots)
+    fieldSlots.forEach((slot, index) => {
+        if (index < 5) {
+            slot.style.border = '2px solid gold';
+        } else {}
+    });
+
+}
+
+
+function switchActivePlayer() {
+    if (activePlayer === 1) {
+        activePlayer = 2;
+    } else {
+        activePlayer = 1;
+    }
+    console.log("Aktiver Spieler: " + activePlayer);
+}
+
 
 $( '#topheader .navbar-nav a' ).on( 'click', function () {
     $( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
