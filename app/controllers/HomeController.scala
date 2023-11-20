@@ -12,6 +12,14 @@ import play.api.routing.JavaScriptReverseRouter
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
   val controller = hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.controller
 
+  def getCards()= Action { implicit request: Request[AnyContent] =>
+     var values = controller.field.players.map(player => 
+          player.gamebar.hand.map(card => card.id).appendedAll(player.gamebar.deck.map(card => card.id))
+     ).flatten;
+    Ok(values.mkString(","))
+  }
+   
+  
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.welcome())
   }
@@ -98,6 +106,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
         routes.javascript.HomeController.attack,
         routes.javascript.HomeController.directAttack,
         routes.javascript.HomeController.drawCard,
+        routes.javascript.HomeController.getCards,
       )).as("text/javascript")
   }
 }

@@ -162,11 +162,27 @@ function handleResize() {
    
   }
 
-window.addEventListener('resize', handleResize);
+    function preloadCards() {
+        $.ajax(jsRoutes.controllers.HomeController.getCards()).done(
+            (response) => {
+                var values = response.split(",");
+                values.forEach(id => {
+                    new Image().src = "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + id + ".png";
+                });
+            }
+            );
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
-    calculateGameAspectRatio();
-});
+$(window).on('resize', handleResize);
+
+function init() {
+    calculateGameAspectRatio()
+    if(typeof window.localStorage !== "undefined" && !localStorage.getItem('visited')) {
+        localStorage.setItem('visited', true);
+        preloadCards();
+   }
+}
+$(document).ready(init);
 
 
 
