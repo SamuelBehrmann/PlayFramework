@@ -20,6 +20,7 @@ GET        /attack                 controllers.HomeController.attack()
 GET        /jsr                    controllers.HomeController.jsRoutes
 GET        /undo                   controllers.HomeController.undo()
 GET        /redo                   controllers.HomeController.redo()
+GET        /getCards               controllers.HomeController.getCards()
 
 # POST-Anfragen
 POST       /placeCard             controllers.HomeController.placeCard()
