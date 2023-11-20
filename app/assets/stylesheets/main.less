@@ -535,10 +535,24 @@ h1 {
     perspective: none;
   }
 
+  .endTurn {
+    position: fixed;
+    right: 6%;
+    top: 45%;
+    width: 10%;
+    
+    .hs-wrapper {
+      width: 100%;
+    }
+
+    .hs-border {
+      width: 100%;
+    } 
+  }
+
   .card-size {
     aspect-ratio: 0.66;
-    height: 20vh;
-    width: 13.33vh;
+    height: 100%;
   }
 
   .disabledCard {
@@ -546,29 +560,44 @@ h1 {
   }
 
   .fieldbar {
-    height: 25vh;
+    height: 50%;
     display: flex;
+    position: relative;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
-    margin-left: 13%;
+    z-index: 0;
 
     .slot {
+      z-index: 1;
       aspect-ratio: 0.66;
-      height: 20vh;
-      width: 13.33vh;
+      height: 80%;
     }
+  }
+
+  .fieldbar-active {
+    align-items: start;
+  }
+
+  .fieldbar-inactive{
+    align-items: end;
   }
 
   .gamecontainer {
     display: flex;
     flex-direction: column-reverse;
-    height: 100%;
-    width: 100%;
-    position: absolute;
+    position: relative;
     box-sizing: border-box;
     transform: translateY(-3%);
+  }
+  
+  .center {
     z-index: -1;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
   }
 
   .bg-image {
@@ -583,11 +612,10 @@ h1 {
     z-index: -1;
   }
 
-  .card,
-  .cardDeck {
+  .card {
     position: relative;
     border-radius: 8px;
-    margin-right: -50px;
+    margin-right: -7%;
     box-sizing: border-box;
     background-color: transparent;
     border: none;
@@ -614,52 +642,50 @@ h1 {
     pointer-events: all;
     position: fixed;
     box-sizing: border-box;
-    left: 46%;
-    height:18vh;
-    z-index: -2;
+    left: 45.7%;
+    height:16.5%;
+    z-index: 1;
   }
 
   .active-char{
-    bottom: 12%;
+    bottom: 12.5%;
   }
 
   .inactive-char{
-    top: 12%;
+    top: 12.5%;
   }
   
   .player {
-    align-content: center;
     width: 100%;
-    display: flex;
-    flex-direction: column;
     z-index: 20;
-    height: 50vh;
+    height: 50%;
+    position: fixed;
   }
 
   .player1 {
-    justify-content: start;
+    bottom: 0;
   }
-
+  
   .player2 {
-    justify-content: start;
+    top: 0;
   }
 
   .hand {
-    height: 25vh;
+    height: 50%;
     width: 100%;
     display: flex;
     flex-direction: row;
     z-index: 5;
     justify-content: center;
     align-items: center;
-    transform: perspective(50em) rotateX(-45deg);
+    transform: perspective(50em) rotateX(-60deg) translateY(-20%);
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
   }
 
 
   .buttonsGameField {
-    height: 100vh;
+    height: 100%;
     display: flex;
     position: absolute;
     justify-content: center;
@@ -676,10 +702,9 @@ h1 {
 
 
   .hand-active {
-    height: 20vh;
-    bottom: -50px;
+    height: 20%;
+    bottom: -5%;
     display: flex;
-    padding: 0 50px;
     justify-content: center;
     position: fixed;
     z-index: 5;
@@ -691,9 +716,9 @@ h1 {
 
     .loop(@i) when (@i > -1) {
       @hue: (@i / @total) * -360;
-      @rotationRange: 30;
+      @rotationRange: 40;
       @rotation: (@i - (@total - 1) / 2) / (@total - 2) * @rotationRange;
-      @offsetRange: 20;
+      @offsetRange: 10%;
       @offset: abs((@i - (@total - 1) / 2) / (@total - 2) * @offsetRange );
       @selector: @i + 1;
 
@@ -730,10 +755,9 @@ h1 {
 
 
     .card {
-      width: 13.66vh;
       content: '';
       border-radius: 8px;
-      margin-right: -50px;
+      margin-right: -4%;
       box-sizing: border-box;
       position: relative;
       border: none;
@@ -760,7 +784,7 @@ h1 {
       }
 
       #card-image {
-        max-width: 100%;
+        max-height: 100%;
         aspect-ratio: 0.66;
       }
     }
@@ -802,24 +826,28 @@ h1 {
     }
   }
 
+  .deck {
+    display: block;
+    height: 20%;
+    aspect-ratio: 0.66;
+    position: fixed;
+    right: 4%;
+  }
+
   .deckP1Background {
     background-image: url("../images/Content/legendcardback.png");
     background-size: 75% 75%;
     background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    margin-left: 45%;
-    margin-top: 15%;
+    background-position: center;
+    top: 25.5%;
   }
-
+  
   .deckP2Background {
     background-image: url("../images/Content/cardback.png");
     background-size: 85% 85%;
     background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    margin-left: 42%;
-    margin-top: 10%;
+    background-position: center;
+    bottom: 27%;
     border: 0; /* Anfangszustand ohne Border */
     transition: border 0.3s ease; /* Animation für den Border-Übergang */
   }
@@ -829,9 +857,11 @@ h1 {
   }
 
   #remainingCards {
-    display: flex;
-    justify-content: center;
-    margin-left: 35%;
+    display: block;
+    position: relative;
+    right: 17%;
+    top: 9%;
+    text-align: right;
     font-family: 'Arial Black',serif;
     font-weight: lighter;
     color: whitesmoke;

@@ -3,22 +3,26 @@
     isActive: Boolean)
 
 <div class="player@{
-    player.id
-} player" style="height: 50vh">
+    if(isActive) {
+        1
+    } else {
+        2
+    }
+} player">
 @if(!isActive) {
     @if(player.id == 1) {
         <img class="char inactive-char" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
     } else {
         <img class="char inactive-char" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
     }
-    <div class="hand" style="height: 25vh">
+    <div class="hand">
     @for(index <- 0 until player.gamebar.hand.length) {
         <div class="card card-size">
            @components.disabledCard()
         </div>
     }
     </div>
-    <div class="fieldbar">
+    <div class="fieldbar fieldbar-inactive">
         @for(index <- 0 until player.fieldbar.cardArea.row.length) {
             <div class="slot" id="field@index" aria-valuenow="@index">@if(player.fieldbar.cardArea.row(index).isDefined) {
                 <div class="card card-size" aria-valuenow="@index"> @components.card(player.fieldbar.cardArea.row(index).get)</div>
@@ -27,18 +31,11 @@
              }
             </div>
         }
-
-        <div class="slot deck" id="deckSlot">
-            <div class="card card-size deckP1Background"></div>
-        </div>
+    </div>
+    <div class="deck deckP1Background" id="deckSlot">
     </div>
 } else {
-    @if(player.id == 1) {
-        <img class="char active-char" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
-    } else {
-        <img class="char active-char" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
-    }
-    <div class="fieldbar">
+    <div class="fieldbar fieldbar-active">
         @for(index <- 0 until player.fieldbar.cardArea.row.length) {
             <div class="slot" draggable="true" id="field@index" aria-valuenow="@index">@if(player.fieldbar.cardArea.row(index).isDefined) {
                    <div class="card card-size" aria-valuenow="@index"> @components.card(player.fieldbar.cardArea.row(index).get)</div>
@@ -48,21 +45,23 @@
             </div>
         }
 
-        <div class="slot deck" id="deckSlot">
-            <div class="card-size deckP2Background" onclick="drawCard()">
-                <span id="remainingCards">@player.gamebar.deck.length</span>
-            </div>
-        </div>
     </div>
-
     <div class="hand-active">
         @for(index <- 0 until player.gamebar.hand.length) {
-                <div class="card" draggable="true" id="hand@index" aria-valuenow="@index" >
-                    <div class="card-face">@components.card(player.gamebar.hand(index))</div> 
-                </div>
-           
+            <div class="card card-size" draggable="true" id="hand@index" aria-valuenow="@index" >
+                <div class="card-face">@components.card(player.gamebar.hand(index))</div> 
+            </div>
+            
         }
     </div>
+    <div class="deck deckP2Background" id="deckSlot" onclick="drawCard()">
+        <span id="remainingCards">@player.gamebar.deck.length</span>
+    </div>
+    @if(player.id == 1) {
+        <img class="char active-char" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
+    } else {
+        <img class="char active-char" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
+    }
 }
 </div>
 

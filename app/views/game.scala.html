@@ -20,17 +20,19 @@
         </div>
         <div class="bg-image" id="bg-image"></div>
         <div style="color: white; position: absolute; bottom: 3em; left: 10px;">@msg</div>
-        <div class="gamecontainer" id="gamecontainer">
-            @for(index <- 0 until field.players.length) {
-                @components.player(field.players(index), index == 0)
-            }
-            <div class="buttonsGameField gameButtons">
-                @components.button("Draw Card", "javascript:window.location.href = '/drawCard';", "classic")
-                @components.button("Direct Attack", "window.location.href = '/directAttack'", "classic")
-                @components.button("End turn", "window.location.href = '/endTurn'", "classic")
-                @components.button("Undo", "window.location.href = '/undo'", "classic")
-                @components.button("Redo", "window.location.href = '/redo'", "classic")
-                @components.button("Exit", "javascript:window.location.href = '/exitGame'", "classic")
+        <div class="center" id="center">
+            <div class="gamecontainer" id="gamecontainer">
+                @for(index <- 0 until field.players.length) {
+                    @components.player(field.players(index), index == 0)
+                }
+                <div class="endTurn">
+                    @components.button("End turn", "window.location.href = '/endTurn'", "classic")
+                </div>
+                <div class="buttonsGameField gameButtons">
+                    @components.button("Undo", "window.location.href = '/undo'", "classic")
+                    @components.button("Redo", "window.location.href = '/redo'", "classic")
+                    @components.button("Exit", "javascript:window.location.href = '/exitGame'", "classic")
+                </div>
             </div>
         </div>
     </body>
