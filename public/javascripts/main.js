@@ -1,3 +1,4 @@
+
 var gameAspectRatio = 1;
 
 function submitModes() {
@@ -182,7 +183,7 @@ function init() {
         preloadCards();
    }
 }
-$(document).ready(init);
+$(window).ready(init);
 
 
 

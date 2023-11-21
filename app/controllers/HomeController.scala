@@ -3,8 +3,10 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import play.twirl.api._
 import hearthstoneMini.model.{Move => Move}
-import hearthstoneMini.controller.GameState
+import hearthstoneMini.controller.{GameState => GameState}
+import hearthstoneMini.model.fieldComponent.fieldImpl.{Field => Field}
 import hearthstoneMini.controller.Strategy
 import play.api.routing.JavaScriptReverseRouter
 
@@ -57,47 +59,61 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       controller.placeCard(Move(handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt, fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt))
       Redirect("/hearthstoneMini")
   }
+
+
   def exitGame() = Action { 
-    controller.exitGame()
-    
     implicit request: Request[AnyContent] =>
-    Redirect("/hearthstoneMini")
+      controller.field = new Field(5);
+      controller.gameState = GameState.CHOOSEMODE;
+
+      val javascriptCode = """
+        |   <script type="text/javascript">
+        |     localStorage.clear();
+        |     window.location.href = '/';
+        |   </script>
+      """.stripMargin
+      Ok(Html(javascriptCode))
   }
+
   def endTurn() = Action { 
     controller.switchPlayer()
     
     implicit request: Request[AnyContent] =>
     Redirect("/hearthstoneMini")
   }
+
   def drawCard() = Action { 
     implicit request: Request[AnyContent] =>
       controller.drawCard()
       Redirect("/hearthstoneMini")
   }
+
   def directAttack() = Action { 
     implicit request: Request[AnyContent] =>
       controller.directAttack(Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt))
       Redirect("/hearthstoneMini")
 
   }
+
   def attack() = Action {
     implicit request: Request[AnyContent] =>
       controller.attack(Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt, fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt)) 
       Redirect("/hearthstoneMini")
   }
+
   def undo() = Action { 
     controller.undo
     
     implicit request: Request[AnyContent] =>
     Redirect("/hearthstoneMini")
   }
+  
   def redo() = Action { 
     controller.redo
     
     implicit request: Request[AnyContent] =>
     Redirect("/hearthstoneMini")
   }
-
 
   def jsRoutes = Action { implicit request =>
     Ok(
