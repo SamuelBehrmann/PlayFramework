@@ -66,13 +66,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       controller.field = new Field(5);
       controller.gameState = GameState.CHOOSEMODE;
 
-      val javascriptCode = """
-        |   <script type="text/javascript">
-        |     localStorage.clear();
-        |     window.location.href = '/';
-        |   </script>
-      """.stripMargin
-      Ok(Html(javascriptCode))
+      Ok("");
   }
 
   def endTurn() = Action { 
@@ -123,6 +117,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
         routes.javascript.HomeController.directAttack,
         routes.javascript.HomeController.drawCard,
         routes.javascript.HomeController.getCards,
+        routes.javascript.HomeController.exitGame,
       )).as("text/javascript")
   }
 }
