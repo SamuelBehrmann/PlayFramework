@@ -1,12 +1,16 @@
-var gameAspectRatio = 1;
 
 function submitModes() {
     document.getElementById('gamemodeForm').submit();
 }
-
-$(document).ajaxStop(function(){
-    window.location.reload();
-});
+function exitGame() {
+    jsRoutes.controllers.HomeController.exitGame().ajax({method: 'GET'}).done(
+        (_) => {
+            sessionStorage.removeItem('visited');
+            preloadCards();
+            window.location.href = '/';
+        }
+    );
+}
 
 const cards = document.querySelectorAll('.card');
 const slots = document.querySelectorAll('.slot');
@@ -102,13 +106,31 @@ function drop(event) {
 
     if (isHandSource) {
         console.log("placeCard")
-        jsRoutes.controllers.HomeController.placeCard().ajax({method: 'POST' ,data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex}})
+        jsRoutes.controllers.HomeController.placeCard().ajax(
+            {
+                method: 'POST' ,
+                data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex},
+                success: (_) => window.location.reload()
+            }
+        )
     } else if (isFieldSource && isFieldTarget) {
         console.log("attack")
-        jsRoutes.controllers.HomeController.attack().ajax({method: 'POST' ,data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex}})
+        jsRoutes.controllers.HomeController.attack().ajax(
+            {
+                method: 'POST' ,
+                data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex},
+                success: (_) => window.location.reload()
+            }
+        )
     } else {
         console.log("directAttack")
-        jsRoutes.controllers.HomeController.directAttack().ajax({method: 'POST' , data: {"activeFieldIndex": sourceIndex}})
+        jsRoutes.controllers.HomeController.directAttack().ajax(
+            {
+                method: 'POST' ,
+                data: {"activeFieldIndex": sourceIndex},
+                success: (_) => window.location.reload()
+            },
+        )
     }
 
     this.classList.remove('drag-over');
@@ -121,7 +143,12 @@ $( '#topheader .navbar-nav a' ).on( 'click', function () {
 
 //Karte ziehen
 function drawCard() {
-    jsRoutes.controllers.HomeController.drawCard().ajax({method: 'POST'});
+    jsRoutes.controllers.HomeController.drawCard().ajax(
+        {
+            method: 'POST',
+            success: (_) => window.location.reload()
+        }
+    );
 }
 
 // Deck bei Hover skalieren
@@ -135,17 +162,20 @@ deckElement.addEventListener('mouseout', () => {
 
 
 function calculateGameAspectRatio() {
-    var img = new Image();
-    img.onload = function(){
-       gameAspectRatio = this.width / this.height;
-       handleResize();
-    };
-    img.src = "./assets/images/Content/background.png";
+    if(typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('gameAspectRatio')) {
+        var img = new Image();
+        img.onload = function(){
+            sessionStorage.setItem('gameAspectRatio', this.width / this.height);
+        };
+        img.src = "./assets/images/Content/background.png";
+    }
+    handleResize();
 }
 
 function handleResize() {
     var gameContainer = document.getElementById("gamecontainer");
     screenAsRa = window.innerWidth / window.innerHeight;
+    var gameAspectRatio = sessionStorage.getItem('gameAspectRatio');
     if (screenAsRa > gameAspectRatio) {
         gameContainer.style.width = window.innerHeight * gameAspectRatio + "px";
         gameContainer.style.maxWidthwidth = window.innerHeight * gameAspectRatio + "px";
@@ -159,30 +189,30 @@ function handleResize() {
         gameContainer.style.maxHeight = window.innerWidth / gameAspectRatio + "px";
         document.getElementById("center").style.flexDirection = "column";
     }
-   
   }
 
     function preloadCards() {
-        $.ajax(jsRoutes.controllers.HomeController.getCards()).done(
-            (response) => {
-                var values = response.split(",");
-                values.forEach(id => {
-                    new Image().src = "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + id + ".png";
-                });
-            }
+        if(typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('visited')) {
+            $.ajax(jsRoutes.controllers.HomeController.getCards()).done(
+                (response) => {
+                    var values = response.split(",");
+                    values.forEach(id => {
+                        new Image().src = "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + id + ".png";
+                    });
+                    sessionStorage.setItem('visited', true);
+                }
             );
+        }
+    }
+    
+    $(window).on('resize', handleResize);
+    
+    function init() {
+        calculateGameAspectRatio()
+        preloadCards();
     }
 
-$(window).on('resize', handleResize);
-
-function init() {
-    calculateGameAspectRatio()
-    if(typeof window.localStorage !== "undefined" && !localStorage.getItem('visited')) {
-        localStorage.setItem('visited', true);
-        preloadCards();
-   }
-}
-$(document).ready(init);
+$(window).ready(init);
 
 
 
