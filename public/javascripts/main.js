@@ -41,6 +41,14 @@ function registerListeners() {
         char.addEventListener('dragover', dragOver);
         char.addEventListener('drop', drop);
     });
+
+    const deckElement = document.querySelector('.deckP2Background');
+    deckElement.addEventListener('mouseover', () => {
+        deckElement.style.transform = 'scale(1.1)';
+    });
+    deckElement.addEventListener('mouseout', () => {
+        deckElement.style.transform = 'scale(1)';
+    });
 }
 
 function dragStart(event) {
@@ -70,6 +78,24 @@ function dragOver(event) {
 
 function dragLeave() {
     this.classList.remove('drag-over');
+}
+
+function undo() {
+    jsRoutes.controllers.HomeController.undo().ajax({
+        success: (data) => updateGame(data.ids)
+    })
+}
+
+function redo() {
+    jsRoutes.controllers.HomeController.redo().ajax({
+        success: (data) => updateGame(ids = data.ids)
+    })
+}
+
+function endTurn() {
+    jsRoutes.controllers.HomeController.endTurn().ajax({
+        success: (data) => updateGame(ids = data.ids)
+    })
 }
 
 function drop(event) {
@@ -112,19 +138,8 @@ function drop(event) {
             {
                 method: 'POST' ,
                 data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex},
-                success: (data) => {
-                    for (let index = 0; index < data.fieldbar.cardarea.row.length; index++) {
-                        if ( data.fieldbar.cardarea.row[index].card != "none") {
-                            $("#field" + index).html('<div class="card card-size" aria-valuenow="'+ index +'"> <div class="card-size"> <img src="' + getImageEndpoint(data.fieldbar.cardarea.row[index].card.id) + '" id="card-image"> </div>')
-                        }
-                    }
-                    var handHtml = '';
-                    for (let index = 0; index < data.gamebar.hand.length; index++) {
-                        handHtml += '<div class="card card-size" draggable="true" id="hand' + index + '" aria-valuenow="' + index + '"> <div class="card-face"><div class="card-size"> <img src="' + getImageEndpoint(data.gamebar.hand[index].card.id) + '" id="card-image"> </div> </div> </div>'
-                    }
-                    $(".hand-active").html(handHtml);
-                    registerListeners();
-                } 
+                success: (data) => updateGame(data.ids)
+                
             }
         )
     } else if (isFieldSource && isFieldTarget) {
@@ -132,7 +147,7 @@ function drop(event) {
             {
                 method: 'POST' ,
                 data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex},
-                success: (_) => window.location.reload()
+                success: (data) => updateGame(data.ids)
             }
         )
     } else {
@@ -140,12 +155,33 @@ function drop(event) {
             {
                 method: 'POST' ,
                 data: {"activeFieldIndex": sourceIndex},
-                success: (_) => window.location.reload()
+                success: (data) => updateGame(data.ids)
             },
         )
     }
 
     this.classList.remove('drag-over');
+}
+
+function updateGame(ids) {
+    jsRoutes.controllers.HomeController.game()
+    .ajax({
+        type: 'GET',
+        success: data => {
+            const parser = new DOMParser();
+            const $remoteDocument = parser.parseFromString(data, "text/html");
+            ids.concat(['#msg']).forEach(id => 
+                updateId(id, $remoteDocument)
+            );
+            registerListeners()
+        },
+    });
+}
+
+function updateId(id, $remoteDoc) {
+    const $target = $remoteDoc.querySelector(id);
+    const $source = $(id)[0];
+    $source.parentNode.replaceChild($target, $source);
 }
 
 $( '#topheader .navbar-nav a' ).on( 'click', function () {
@@ -158,20 +194,10 @@ function drawCard() {
     jsRoutes.controllers.HomeController.drawCard().ajax(
         {
             method: 'POST',
-            success: (_) => window.location.reload()
+            success: (data) => updateGame(data.ids)
         }
     );
 }
-
-// Deck bei Hover skalieren
-const deckElement = document.querySelector('.deckP2Background');
-deckElement.addEventListener('mouseover', () => {
-    deckElement.style.transform = 'scale(1.1)';
-});
-deckElement.addEventListener('mouseout', () => {
-    deckElement.style.transform = 'scale(1)';
-});
-
 
 function calculateGameAspectRatio() {
     if(typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('gameAspectRatio')) {
