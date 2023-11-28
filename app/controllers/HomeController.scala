@@ -143,6 +143,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
         routes.javascript.HomeController.undo,
         routes.javascript.HomeController.redo,
         routes.javascript.HomeController.endTurn,
+        routes.javascript.HomeController.exitGame,
       )).as("text/javascript")
   }
 }
