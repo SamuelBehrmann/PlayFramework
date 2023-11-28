@@ -56,8 +56,11 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def placeCard() = Action { 
     implicit request: Request[AnyContent] =>
-      controller.placeCard(Move(handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt, fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt))
-      Redirect("/hearthstoneMini")
+      controller.placeCard(Move(
+        handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt,
+        fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt));
+
+      Ok(controller.field.players.head.toJson)
   }
 
 

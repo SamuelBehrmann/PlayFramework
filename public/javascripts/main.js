@@ -1,7 +1,10 @@
 
+function getImageEndpoint(imgId)  {return "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + imgId + ".png"};
+
 function submitModes() {
     document.getElementById('gamemodeForm').submit();
 }
+
 function exitGame() {
     jsRoutes.controllers.HomeController.exitGame().ajax({method: 'GET'}).done(
         (_) => {
@@ -12,31 +15,33 @@ function exitGame() {
     );
 }
 
-const cards = document.querySelectorAll('.card');
-const slots = document.querySelectorAll('.slot');
-const chars = document.querySelectorAll('.char')
-let dragged;
+function registerListeners() {
+    const cards = document.querySelectorAll('.card');
+    const slots = document.querySelectorAll('.slot');
+    const chars = document.querySelectorAll('.char')
+    let dragged;
 
-// Event Listeners für das ziehbare Element
-cards.forEach(card => {
-    card.addEventListener('dragstart', dragStart);
-    card.addEventListener('dragend', dragEnd);
-});
+    // Event Listeners für das ziehbare Element
+    cards.forEach(card => {
+        card.addEventListener('dragstart', dragStart);
+        card.addEventListener('dragend', dragEnd);
+    });
 
-// Event Listeners für die Dropzone
-slots.forEach(slot => {
-    slot.addEventListener('dragenter', dragEnter);
-    slot.addEventListener('dragover', dragOver);
-    slot.addEventListener('dragleave', dragLeave);
-    slot.addEventListener('drop', drop);
-});
+    // Event Listeners für die Dropzone
+    slots.forEach(slot => {
+        slot.addEventListener('dragenter', dragEnter);
+        slot.addEventListener('dragover', dragOver);
+        slot.addEventListener('dragleave', dragLeave);
+        slot.addEventListener('drop', drop);
+    });
 
-chars.forEach(char => {
-    char.addEventListener('dragenter', dragEnter);
-    char.addEventListener('dragleave', dragLeave);
-    char.addEventListener('dragover', dragOver);
-    char.addEventListener('drop', drop);
-});
+    chars.forEach(char => {
+        char.addEventListener('dragenter', dragEnter);
+        char.addEventListener('dragleave', dragLeave);
+        char.addEventListener('dragover', dragOver);
+        char.addEventListener('drop', drop);
+    });
+}
 
 function dragStart(event) {
     dragged = this;
@@ -110,7 +115,19 @@ function drop(event) {
             {
                 method: 'POST' ,
                 data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex},
-                success: (_) => window.location.reload()
+                success: (data) => {
+                    for (let index = 0; index < data.fieldbar.cardarea.row.length; index++) {
+                        if ( data.fieldbar.cardarea.row[index].card != "none") {
+                            $("#field" + index).html('<div class="card card-size" aria-valuenow="'+ index +'"> <div class="card-size"> <img src="' + getImageEndpoint(data.fieldbar.cardarea.row[index].card.id) + '" id="card-image"> </div>')
+                        }
+                    }
+                    var handHtml = '';
+                    for (let index = 0; index < data.gamebar.hand.length; index++) {
+                        handHtml += '<div class="card card-size" draggable="true" id="hand' + index + '" aria-valuenow="' + index + '"> <div class="card-face"><div class="card-size"> <img src="' + getImageEndpoint(data.gamebar.hand[index].card.id) + '" id="card-image"> </div> </div> </div>'
+                    }
+                    $(".hand-active").html(handHtml);
+                    registerListeners();
+                } 
             }
         )
     } else if (isFieldSource && isFieldTarget) {
@@ -197,7 +214,7 @@ function handleResize() {
                 (response) => {
                     var values = response.split(",");
                     values.forEach(id => {
-                        new Image().src = "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + id + ".png";
+                        new Image().src = getImageEndpoint(id);
                     });
                     sessionStorage.setItem('visited', true);
                 }
@@ -208,6 +225,7 @@ function handleResize() {
     $(window).on('resize', handleResize);
     
     function init() {
+        registerListeners();
         calculateGameAspectRatio()
         preloadCards();
     }
