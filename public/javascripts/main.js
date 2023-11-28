@@ -75,8 +75,6 @@ function dragLeave() {
 function drop(event) {
     event.preventDefault();
     const data = event.dataTransfer.getData('text/plain');
-    console.log(this)
-    console.log(dragged)
     var sourceIndex = dragged.getAttribute('aria-valuenow');
     var targetIndex = this.getAttribute('aria-valuenow')
 
@@ -110,7 +108,6 @@ function drop(event) {
     }
 
     if (isHandSource) {
-        console.log("placeCard")
         jsRoutes.controllers.HomeController.placeCard().ajax(
             {
                 method: 'POST' ,
@@ -131,7 +128,6 @@ function drop(event) {
             }
         )
     } else if (isFieldSource && isFieldTarget) {
-        console.log("attack")
         jsRoutes.controllers.HomeController.attack().ajax(
             {
                 method: 'POST' ,
@@ -140,7 +136,6 @@ function drop(event) {
             }
         )
     } else {
-        console.log("directAttack")
         jsRoutes.controllers.HomeController.directAttack().ajax(
             {
                 method: 'POST' ,
