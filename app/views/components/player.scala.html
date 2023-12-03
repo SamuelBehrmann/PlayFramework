@@ -11,9 +11,9 @@
 } player">
 @if(!isActive) {
     @if(player.id == 1) {
-        <img class="char inactive-char" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
+        <img class="char inactive-char" draggable="false" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
     } else {
-        <img class="char inactive-char" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
+        <img class="char inactive-char" draggable="false" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
     }
     <div class="hand">
     @for(index <- 0 until player.gamebar.hand.length) {
@@ -44,7 +44,6 @@
                 }
             </div>
         }
-
     </div>
     <div class="hand-active">
         @for(index <- 0 until player.gamebar.hand.length) {
@@ -58,9 +57,9 @@
         <span id="remainingCards">@player.gamebar.deck.length</span>
     </div>
     @if(player.id == 1) {
-        <img class="char active-char" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
+        <img class="char active-char" draggable="false" src="@routes.Assets.versioned("images/Content/jaina_proudmoore.gif")" alt="">
     } else {
-        <img class="char active-char" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
+        <img class="char active-char" draggable="false" src="@routes.Assets.versioned("images/Content/medivh.gif")" alt="">
     }
 }
 </div>

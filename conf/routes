@@ -9,7 +9,7 @@ POST       /initGame              controllers.HomeController.initGame()
 
 # GET-Anfragen
 GET        /gameRules              controllers.HomeController.gameRules()
-GET        /hearthstoneMini        controllers.HomeController.game
+GET        /hearthstoneMini        controllers.HomeController.game()
 GET        /initGame               controllers.HomeController.initGame()
 GET        /placeCard              controllers.HomeController.placeCard()
 GET        /endTurn                controllers.HomeController.endTurn()
