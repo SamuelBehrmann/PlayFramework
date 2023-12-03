@@ -4,30 +4,30 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET        /                       controllers.HomeController.index()
-POST       /initGame              controllers.HomeController.initGame()
+GET         /                       controllers.HomeController.index()
+POST        /initGame               controllers.HomeController.initGame()
 
 # GET-Anfragen
-GET        /gameRules              controllers.HomeController.gameRules()
-GET        /hearthstoneMini        controllers.HomeController.game()
-GET        /initGame               controllers.HomeController.initGame()
-GET        /placeCard              controllers.HomeController.placeCard()
-GET        /endTurn                controllers.HomeController.endTurn()
-GET        /exitGame               controllers.HomeController.exitGame()
-GET        /drawCard               controllers.HomeController.drawCard()
-GET        /directAttack           controllers.HomeController.directAttack()
-GET        /attack                 controllers.HomeController.attack()
-GET        /jsr                    controllers.HomeController.jsRoutes
-GET        /undo                   controllers.HomeController.undo()
-GET        /redo                   controllers.HomeController.redo()
-GET        /getCards               controllers.HomeController.getCards()
-GET        /websocket              controllers.HomeController.socket()
+GET         /gameRules              controllers.HomeController.gameRules()
+GET         /hearthstoneMini        controllers.HomeController.game
+GET         /initGame               controllers.HomeController.initGame()
+GET         /placeCard              controllers.HomeController.placeCard()
+GET         /endTurn                controllers.HomeController.endTurn()
+GET         /exitGame               controllers.HomeController.exitGame()
+GET         /drawCard               controllers.HomeController.drawCard()
+GET         /directAttack           controllers.HomeController.directAttack()
+GET         /attack                 controllers.HomeController.attack()
+GET         /jsr                    controllers.HomeController.jsRoutes
+GET         /undo                   controllers.HomeController.undo()
+GET         /redo                   controllers.HomeController.redo()
+GET         /getCards               controllers.HomeController.getCards()
+GET         /websocket              controllers.HomeController.socket()
 
 # POST-Anfragen
-POST       /placeCard             controllers.HomeController.placeCard()
-POST       /drawCard               controllers.HomeController.drawCard()
-POST       /directAttack          controllers.HomeController.directAttack()
-POST       /attack                controllers.HomeController.attack()
+POST        /placeCard              controllers.HomeController.placeCard()
+POST        /drawCard               controllers.HomeController.drawCard()
+POST        /directAttack           controllers.HomeController.directAttack()
+POST        /attack                 controllers.HomeController.attack()
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
