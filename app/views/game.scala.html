@@ -19,19 +19,17 @@
             </nav>
         </div>
         <div class="bg-image" id="bg-image"></div>
-        <div style="color: white; position: absolute; bottom: 3em; left: 10px;">@msg</div>
+        <div id="msg" style="color: white; position: absolute; bottom: 3em; left: 10px;">@msg</div>
         <div class="center" id="center">
             <div class="gamecontainer" id="gamecontainer">
                 @for(index <- 0 until field.players.length) {
                     @components.player(field.players(index), index == 0)
                 }
-                <!-- <div class="endTurn">
-                </div> -->
                 <div class="buttonsGameField gameButtons">
-                    @components.button("End turn", "window.location.href = '/endTurn'", "classic")
-                    @components.button("Undo", "window.location.href = '/undo'", "classic")
-                    @components.button("Redo", "window.location.href = '/redo'", "classic")
-                    @components.button("Exit", "javascript:window.location.href = '/exitGame'", "classic")
+                    @components.button("End turn", "endTurn()", "classic")
+                    @components.button("Undo", "undo()", "classic")
+                    @components.button("Redo", "redo()", "classic")
+                    @components.button("Exit", "exitGame()", "classic")
                 </div>
             </div>
         </div>

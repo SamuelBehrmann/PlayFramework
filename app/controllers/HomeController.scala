@@ -3,10 +3,13 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import play.twirl.api._
 import hearthstoneMini.model.{Move => Move}
-import hearthstoneMini.controller.GameState
+import hearthstoneMini.controller.{GameState => GameState}
+import hearthstoneMini.model.fieldComponent.fieldImpl.{Field => Field}
 import hearthstoneMini.controller.Strategy
 import play.api.routing.JavaScriptReverseRouter
+import play.api.libs.json._
 
 @Singleton
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
@@ -28,7 +31,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.gameRules())
   }
 
-  def game = Action { implicit request: Request[AnyContent] =>
+  def game() = Action { implicit request: Request[AnyContent] =>
     Ok(controller.gameState match {
                 case GameState.CHOOSEMODE => views.html.gamemode()
                 case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(controller = controller)
@@ -54,59 +57,93 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def placeCard() = Action { 
     implicit request: Request[AnyContent] =>
-      controller.placeCard(Move(handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt, fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt))
-      Redirect("/hearthstoneMini")
+      var handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt
+      var fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt
+
+      controller.placeCard(Move(
+        handSlot = handSlot,
+        fieldSlotActive = fieldSlotActive));
+
+      Ok(mapIdsToJson(ids = List(s"#field$fieldSlotActive", ".hand-active")))
   }
+
+  def mapIdsToJson(ids: List[String]) = {
+    JsObject(
+        Seq(
+          "ids" -> JsArray(
+              ids.map[JsString](id => JsString(id)).toIndexedSeq
+          )
+        )
+      )
+  }
+
   def exitGame() = Action { 
-    controller.exitGame()
-    
     implicit request: Request[AnyContent] =>
-    Redirect("/hearthstoneMini")
+      controller.field = new Field(5);
+      controller.gameState = GameState.CHOOSEMODE;
+
+      Ok("");
   }
+
   def endTurn() = Action { 
     controller.switchPlayer()
     
     implicit request: Request[AnyContent] =>
-    Redirect("/hearthstoneMini")
+    Ok(mapIdsToJson(ids = List(".player1", ".player2")))
   }
+
   def drawCard() = Action { 
     implicit request: Request[AnyContent] =>
       controller.drawCard()
-      Redirect("/hearthstoneMini")
+      Ok(mapIdsToJson(ids = List(".deckP2Background", ".hand-active")))
   }
+
   def directAttack() = Action { 
     implicit request: Request[AnyContent] =>
-      controller.directAttack(Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt))
-      Redirect("/hearthstoneMini")
-
+      var fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt
+      controller.directAttack(Move(fieldSlotActive = fieldSlotActive))
+      Ok(mapIdsToJson(ids = List(".player2")))
   }
+
   def attack() = Action {
     implicit request: Request[AnyContent] =>
-      controller.attack(Move(fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt, fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt)) 
-      Redirect("/hearthstoneMini")
+      var fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt
+      var fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt
+      controller.attack(Move(
+        fieldSlotActive = fieldSlotActive, 
+        fieldSlotInactive = fieldSlotInactive
+        )
+      ) 
+      Ok(mapIdsToJson(ids = List(".fieldbar-inactive", ".fieldbar-active")))
   }
+
   def undo() = Action { 
     controller.undo
     
     implicit request: Request[AnyContent] =>
-    Redirect("/hearthstoneMini")
+    Ok(mapIdsToJson(ids = List(".player1", ".player2")))
   }
+  
   def redo() = Action { 
     controller.redo
     
     implicit request: Request[AnyContent] =>
-    Redirect("/hearthstoneMini")
+    Ok(mapIdsToJson(ids = List(".player1", ".player2")))
   }
-
 
   def jsRoutes = Action { implicit request =>
     Ok(
       JavaScriptReverseRouter("jsRoutes")(
+        routes.javascript.HomeController.game,
         routes.javascript.HomeController.placeCard,
         routes.javascript.HomeController.attack,
         routes.javascript.HomeController.directAttack,
         routes.javascript.HomeController.drawCard,
         routes.javascript.HomeController.getCards,
+        routes.javascript.HomeController.undo,
+        routes.javascript.HomeController.redo,
+        routes.javascript.HomeController.endTurn,
+        routes.javascript.HomeController.exitGame,
       )).as("text/javascript")
   }
 }

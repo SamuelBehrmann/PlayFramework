@@ -1,38 +1,55 @@
-var gameAspectRatio = 1;
+
+function getImageEndpoint(imgId)  {return "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + imgId + ".png"};
 
 function submitModes() {
     document.getElementById('gamemodeForm').submit();
 }
 
-$(document).ajaxStop(function(){
-    window.location.reload();
-});
+function exitGame() {
+    jsRoutes.controllers.HomeController.exitGame().ajax({method: 'GET'}).done(
+        (_) => {
+            sessionStorage.removeItem('visited');
+            preloadCards();
+            window.location.href = '/';
+        }
+    );
+}
 
-const cards = document.querySelectorAll('.card');
-const slots = document.querySelectorAll('.slot');
-const chars = document.querySelectorAll('.char')
-let dragged;
+function registerListeners() {
+    const cards = document.querySelectorAll('.card');
+    const slots = document.querySelectorAll('.slot');
+    const chars = document.querySelectorAll('.char')
+    let dragged;
 
-// Event Listeners für das ziehbare Element
-cards.forEach(card => {
-    card.addEventListener('dragstart', dragStart);
-    card.addEventListener('dragend', dragEnd);
-});
+    // Event Listeners für das ziehbare Element
+    cards.forEach(card => {
+        card.addEventListener('dragstart', dragStart);
+        card.addEventListener('dragend', dragEnd);
+    });
 
-// Event Listeners für die Dropzone
-slots.forEach(slot => {
-    slot.addEventListener('dragenter', dragEnter);
-    slot.addEventListener('dragover', dragOver);
-    slot.addEventListener('dragleave', dragLeave);
-    slot.addEventListener('drop', drop);
-});
+    // Event Listeners für die Dropzone
+    slots.forEach(slot => {
+        slot.addEventListener('dragenter', dragEnter);
+        slot.addEventListener('dragover', dragOver);
+        slot.addEventListener('dragleave', dragLeave);
+        slot.addEventListener('drop', drop);
+    });
 
-chars.forEach(char => {
-    char.addEventListener('dragenter', dragEnter);
-    char.addEventListener('dragleave', dragLeave);
-    char.addEventListener('dragover', dragOver);
-    char.addEventListener('drop', drop);
-});
+    chars.forEach(char => {
+        char.addEventListener('dragenter', dragEnter);
+        char.addEventListener('dragleave', dragLeave);
+        char.addEventListener('dragover', dragOver);
+        char.addEventListener('drop', drop);
+    });
+
+    const deckElement = document.querySelector('.deckP2Background');
+    deckElement.addEventListener('mouseover', () => {
+        deckElement.style.transform = 'scale(1.1)';
+    });
+    deckElement.addEventListener('mouseout', () => {
+        deckElement.style.transform = 'scale(1)';
+    });
+}
 
 function dragStart(event) {
     dragged = this;
@@ -63,11 +80,27 @@ function dragLeave() {
     this.classList.remove('drag-over');
 }
 
+function undo() {
+    jsRoutes.controllers.HomeController.undo().ajax({
+        success: (data) => updateGame(data.ids)
+    })
+}
+
+function redo() {
+    jsRoutes.controllers.HomeController.redo().ajax({
+        success: (data) => updateGame(ids = data.ids)
+    })
+}
+
+function endTurn() {
+    jsRoutes.controllers.HomeController.endTurn().ajax({
+        success: (data) => updateGame(ids = data.ids)
+    })
+}
+
 function drop(event) {
     event.preventDefault();
     const data = event.dataTransfer.getData('text/plain');
-    console.log(this)
-    console.log(dragged)
     var sourceIndex = dragged.getAttribute('aria-valuenow');
     var targetIndex = this.getAttribute('aria-valuenow')
 
@@ -101,17 +134,54 @@ function drop(event) {
     }
 
     if (isHandSource) {
-        console.log("placeCard")
-        jsRoutes.controllers.HomeController.placeCard().ajax({method: 'POST' ,data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex}})
+        jsRoutes.controllers.HomeController.placeCard().ajax(
+            {
+                method: 'POST' ,
+                data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex},
+                success: (data) => updateGame(data.ids)
+                
+            }
+        )
     } else if (isFieldSource && isFieldTarget) {
-        console.log("attack")
-        jsRoutes.controllers.HomeController.attack().ajax({method: 'POST' ,data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex}})
+        jsRoutes.controllers.HomeController.attack().ajax(
+            {
+                method: 'POST' ,
+                data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex},
+                success: (data) => updateGame(data.ids)
+            }
+        )
     } else {
-        console.log("directAttack")
-        jsRoutes.controllers.HomeController.directAttack().ajax({method: 'POST' , data: {"activeFieldIndex": sourceIndex}})
+        jsRoutes.controllers.HomeController.directAttack().ajax(
+            {
+                method: 'POST' ,
+                data: {"activeFieldIndex": sourceIndex},
+                success: (data) => updateGame(data.ids)
+            },
+        )
     }
 
     this.classList.remove('drag-over');
+}
+
+function updateGame(ids) {
+    jsRoutes.controllers.HomeController.game()
+    .ajax({
+        type: 'GET',
+        success: data => {
+            const parser = new DOMParser();
+            const $remoteDocument = parser.parseFromString(data, "text/html");
+            ids.concat(['#msg']).forEach(id => 
+                updateId(id, $remoteDocument)
+            );
+            registerListeners()
+        },
+    });
+}
+
+function updateId(id, $remoteDoc) {
+    const $target = $remoteDoc.querySelector(id);
+    const $source = $(id)[0];
+    $source.parentNode.replaceChild($target, $source);
 }
 
 $( '#topheader .navbar-nav a' ).on( 'click', function () {
@@ -121,31 +191,29 @@ $( '#topheader .navbar-nav a' ).on( 'click', function () {
 
 //Karte ziehen
 function drawCard() {
-    jsRoutes.controllers.HomeController.drawCard().ajax({method: 'POST'});
+    jsRoutes.controllers.HomeController.drawCard().ajax(
+        {
+            method: 'POST',
+            success: (data) => updateGame(data.ids)
+        }
+    );
 }
 
-// Deck bei Hover skalieren
-const deckElement = document.querySelector('.deckP2Background');
-deckElement.addEventListener('mouseover', () => {
-    deckElement.style.transform = 'scale(1.1)';
-});
-deckElement.addEventListener('mouseout', () => {
-    deckElement.style.transform = 'scale(1)';
-});
-
-
 function calculateGameAspectRatio() {
-    var img = new Image();
-    img.onload = function(){
-       gameAspectRatio = this.width / this.height;
-       handleResize();
-    };
-    img.src = "./assets/images/Content/background.png";
+    if(typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('gameAspectRatio')) {
+        var img = new Image();
+        img.onload = function(){
+            sessionStorage.setItem('gameAspectRatio', this.width / this.height);
+        };
+        img.src = "./assets/images/Content/background.png";
+    }
+    handleResize();
 }
 
 function handleResize() {
     var gameContainer = document.getElementById("gamecontainer");
     screenAsRa = window.innerWidth / window.innerHeight;
+    var gameAspectRatio = sessionStorage.getItem('gameAspectRatio');
     if (screenAsRa > gameAspectRatio) {
         gameContainer.style.width = window.innerHeight * gameAspectRatio + "px";
         gameContainer.style.maxWidthwidth = window.innerHeight * gameAspectRatio + "px";
@@ -159,30 +227,31 @@ function handleResize() {
         gameContainer.style.maxHeight = window.innerWidth / gameAspectRatio + "px";
         document.getElementById("center").style.flexDirection = "column";
     }
-   
   }
 
     function preloadCards() {
-        $.ajax(jsRoutes.controllers.HomeController.getCards()).done(
-            (response) => {
-                var values = response.split(",");
-                values.forEach(id => {
-                    new Image().src = "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + id + ".png";
-                });
-            }
+        if(typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('visited')) {
+            $.ajax(jsRoutes.controllers.HomeController.getCards()).done(
+                (response) => {
+                    var values = response.split(",");
+                    values.forEach(id => {
+                        new Image().src = getImageEndpoint(id);
+                    });
+                    sessionStorage.setItem('visited', true);
+                }
             );
+        }
+    }
+    
+    $(window).on('resize', handleResize);
+    
+    function init() {
+        registerListeners();
+        calculateGameAspectRatio()
+        preloadCards();
     }
 
-$(window).on('resize', handleResize);
-
-function init() {
-    calculateGameAspectRatio()
-    if(typeof window.localStorage !== "undefined" && !localStorage.getItem('visited')) {
-        localStorage.setItem('visited', true);
-        preloadCards();
-   }
-}
-$(document).ready(init);
+$(window).ready(init);
 
 
 
