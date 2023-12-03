@@ -1,12 +1,12 @@
 
-function getImageEndpoint(imgId)  {return "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + imgId + ".png"};
+function getImageEndpoint(imgId) { return "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + imgId + ".png" };
 
 function submitModes() {
     document.getElementById('gamemodeForm').submit();
 }
 
 function exitGame() {
-    jsRoutes.controllers.HomeController.exitGame().ajax({method: 'GET'}).done(
+    jsRoutes.controllers.HomeController.exitGame().ajax({ method: 'GET' }).done(
         (_) => {
             sessionStorage.removeItem('visited');
             preloadCards();
@@ -56,8 +56,8 @@ function dragStart(event) {
     var doc = document.createElement('div');
 
     doc.innerHTML = event.target.querySelectorAll('#card-image')[0].outerHTML;
-    doc.setAttribute("style","width:10px");
-    
+    doc.setAttribute("style", "width:10px");
+
     event.dataTransfer.setDragImage(doc.firstChild, event.target.offsetWidth / 2, event.target.offsetWidth / 2);
     event.dataTransfer.setData('text/plain', event.target.getAttribute('aria-valuenow'));
     this.classList.add('dragging');
@@ -107,15 +107,15 @@ function drop(event) {
     var currentElement = dragged;
 
     var isHandSource = false;
-    var isFieldSource= false;
+    var isFieldSource = false;
     var isFieldTarget = false;
     var isPlayerTarget = false;
 
     while (currentElement !== null) {
         if (currentElement.classList && currentElement.classList.contains('hand-active')) {
             isHandSource = true;
-            break;  
-        } else if (currentElement.classList && currentElement.classList.contains('fieldbar')){
+            break;
+        } else if (currentElement.classList && currentElement.classList.contains('fieldbar')) {
             isFieldSource = true;
         }
         currentElement = currentElement.parentElement;
@@ -125,7 +125,7 @@ function drop(event) {
     while (currentElement !== null) {
         if (currentElement.classList && currentElement.classList.contains('fieldbar')) {
             isFieldTarget = true;
-            break;  
+            break;
         } else if (currentElement.classList && currentElement.classList.contains('char')) {
             isPlayerTarget = true;
             break;
@@ -136,25 +136,25 @@ function drop(event) {
     if (isHandSource) {
         jsRoutes.controllers.HomeController.placeCard().ajax(
             {
-                method: 'POST' ,
-                data: {"fieldIndex": targetIndex, "handSlotIndex": sourceIndex},
+                method: 'POST',
+                data: { "fieldIndex": targetIndex, "handSlotIndex": sourceIndex },
                 success: (data) => updateGame(data.ids)
-                
+
             }
         )
     } else if (isFieldSource && isFieldTarget) {
         jsRoutes.controllers.HomeController.attack().ajax(
             {
-                method: 'POST' ,
-                data: {"inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex},
+                method: 'POST',
+                data: { "inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex },
                 success: (data) => updateGame(data.ids)
             }
         )
     } else {
         jsRoutes.controllers.HomeController.directAttack().ajax(
             {
-                method: 'POST' ,
-                data: {"activeFieldIndex": sourceIndex},
+                method: 'POST',
+                data: { "activeFieldIndex": sourceIndex },
                 success: (data) => updateGame(data.ids)
             },
         )
@@ -165,17 +165,17 @@ function drop(event) {
 
 function updateGame(ids) {
     jsRoutes.controllers.HomeController.game()
-    .ajax({
-        type: 'GET',
-        success: data => {
-            const parser = new DOMParser();
-            const $remoteDocument = parser.parseFromString(data, "text/html");
-            ids.concat(['#msg']).forEach(id => 
-                updateId(id, $remoteDocument)
-            );
-            registerListeners()
-        },
-    });
+        .ajax({
+            type: 'GET',
+            success: data => {
+                const parser = new DOMParser();
+                const $remoteDocument = parser.parseFromString(data, "text/html");
+                ids.concat(['#msg']).forEach(id =>
+                    updateId(id, $remoteDocument)
+                );
+                registerListeners()
+            },
+        });
 }
 
 function updateId(id, $remoteDoc) {
@@ -184,9 +184,9 @@ function updateId(id, $remoteDoc) {
     $source.parentNode.replaceChild($target, $source);
 }
 
-$( '#topheader .navbar-nav a' ).on( 'click', function () {
-    $( '#topheader .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
-    $( this ).parent( 'li' ).addClass( 'active' );
+$('#topheader .navbar-nav a').on('click', function () {
+    $('#topheader .navbar-nav').find('li.active').removeClass('active');
+    $(this).parent('li').addClass('active');
 });
 
 //Karte ziehen
@@ -200,9 +200,9 @@ function drawCard() {
 }
 
 function calculateGameAspectRatio() {
-    if(typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('gameAspectRatio')) {
+    if (typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('gameAspectRatio')) {
         var img = new Image();
-        img.onload = function(){
+        img.onload = function () {
             sessionStorage.setItem('gameAspectRatio', this.width / this.height);
         };
         img.src = "./assets/images/Content/background.png";
@@ -227,29 +227,54 @@ function handleResize() {
         gameContainer.style.maxHeight = window.innerWidth / gameAspectRatio + "px";
         document.getElementById("center").style.flexDirection = "column";
     }
-  }
+}
 
-    function preloadCards() {
-        if(typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('visited')) {
-            $.ajax(jsRoutes.controllers.HomeController.getCards()).done(
-                (response) => {
-                    var values = response.split(",");
-                    values.forEach(id => {
-                        new Image().src = getImageEndpoint(id);
-                    });
-                    sessionStorage.setItem('visited', true);
-                }
-            );
+function connectWebSocket() {
+    var websocket = new WebSocket("ws://localhost:9000/websocket");
+    websocket.setTimeout
+
+    websocket.onopen = function (event) {
+        console.log("Connected to Websocket");
+    }
+
+    websocket.onclose = function () {
+        console.log('Connection with Websocket Closed!');
+    };
+
+    websocket.onerror = function (error) {
+        console.log('Error in Websocket Occured: ' + error);
+    };
+
+    websocket.onmessage = function (msg) {
+        if (typeof msg.data === "string") {
+            let data = JSON.parse(msg.data);
+            updateGame(data.ids)
         }
+    };
+}
+
+function preloadCards() {
+    if (typeof window.sessionStorage !== "undefined" && !sessionStorage.getItem('visited')) {
+        $.ajax(jsRoutes.controllers.HomeController.getCards()).done(
+            (response) => {
+                var values = response.split(",");
+                values.forEach(id => {
+                    new Image().src = getImageEndpoint(id);
+                });
+                sessionStorage.setItem('visited', true);
+            }
+        );
     }
-    
-    $(window).on('resize', handleResize);
-    
-    function init() {
-        registerListeners();
-        calculateGameAspectRatio()
-        preloadCards();
-    }
+}
+
+$(window).on('resize', handleResize);
+
+function init() {
+    connectWebSocket();
+    registerListeners();
+    calculateGameAspectRatio();
+    preloadCards();
+}
 
 $(window).ready(init);
 

@@ -21,6 +21,7 @@ GET        /jsr                    controllers.HomeController.jsRoutes
 GET        /undo                   controllers.HomeController.undo()
 GET        /redo                   controllers.HomeController.redo()
 GET        /getCards               controllers.HomeController.getCards()
+GET        /websocket              controllers.HomeController.socket()
 
 # POST-Anfragen
 POST       /placeCard             controllers.HomeController.placeCard()
