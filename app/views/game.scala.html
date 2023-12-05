@@ -1,4 +1,4 @@
-@(msg: String)(controller: hearthstoneMini.controller.component.ControllerInterface)
+@(msg: String)(controller: hearthstoneMini.controller.component.ControllerInterface)(playerId: Int)
 @field = @{
     controller.field
 }
@@ -22,8 +22,14 @@
         <div id="msg" style="color: white; position: absolute; bottom: 3em; left: 10px;">@msg</div>
         <div class="center" id="center">
             <div class="gamecontainer" id="gamecontainer">
-                @for(index <- 0 until field.players.length) {
-                    @components.player(field.players(index), index == 0)
+                @if(playerId == 0) {
+                    @for(index <- 0 until field.players.length) {
+                        @components.player(field.players(index), index == 0)
+                    }
+                } else {
+                    @for(index <- 0 until field.players.length) {
+                        @components.player(field.players.reverse(index), index == 0)
+                    }
                 }
                 <div class="buttonsGameField gameButtons">
                     @components.button("End turn", "endTurn()", "classic")

@@ -1,5 +1,7 @@
 
 var websocket;
+var clientId;
+
 function getImageEndpoint(imgId) { return "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + imgId + ".png" };
 
 function submitModes() {
@@ -157,7 +159,10 @@ function drop(event) {
 function updateGame(ids) {
     jsRoutes.controllers.HomeController.game()
         .ajax({
-            type: 'GET',
+            method: sessionStorage.getItem('clientId') ? 'POST' : 'GET',
+            data: {
+                "id": sessionStorage.getItem("clientId")
+            },
             success: data => {
                 const parser = new DOMParser();
                 const $remoteDocument = parser.parseFromString(data, "text/html");
@@ -235,7 +240,11 @@ function connectWebSocket() {
     websocket.onmessage = function (msg) {
         if (typeof msg.data === "string") {
             let data = JSON.parse(msg.data);
-            updateGame(data.ids)
+            if (data.hasOwnProperty("id") && !sessionStorage.getItem('clientId')) {
+                sessionStorage.setItem('clientId', data.id);
+            } else {
+                updateGame(data.ids)
+            }
         }
     };
 }
