@@ -1,26 +1,24 @@
 package controllers
 
 import javax.inject._
-import play.api._
 import play.api.mvc._
-import play.twirl.api._
 import hearthstoneMini.model.{Move => Move}
 import hearthstoneMini.controller.{GameState => GameState}
 import hearthstoneMini.model.fieldComponent.fieldImpl.{Field => Field}
 import hearthstoneMini.controller.Strategy
 import play.api.routing.JavaScriptReverseRouter
-import play.api.libs.json._
 import play.api.libs.streams.ActorFlow
 import akka.actor._
 import akka.actor.ActorSystem
 import hearthstoneMini.util.Observer
 import hearthstoneMini.util.Event
+import play.api.libs.json.{JsArray, JsBoolean, JsValue, JsString, JsObject, StaticBinding}
 
 @Singleton
 class HomeController @Inject()(implicit system: ActorSystem, val controllerComponents: ControllerComponents) extends BaseController {
   val controller = hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.controller
   var updatedIds: List[String] = List();
-
+  
   def getCards()= Action { implicit request: Request[AnyContent] =>
      var values = controller.field.players.map(player => 
           player.gamebar.hand.map(card => card.id).appendedAll(player.gamebar.deck.map(card => card.id))
@@ -61,19 +59,6 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
       Redirect("/hearthstoneMini")
   }
 
-  def placeCard() = Action { 
-    implicit request: Request[AnyContent] =>
-      var handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt
-      var fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt
-
-      updatedIds = List(s"#field$fieldSlotActive", ".hand-active");
-      controller.placeCard(Move(
-        handSlot = handSlot,
-        fieldSlotActive = fieldSlotActive));
-
-      Ok(mapIdsToJson(ids = updatedIds))
-  }
-
   def mapIdsToJson(ids: List[String]) = {
     JsObject(
         Seq(
@@ -92,55 +77,6 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
       Ok("");
   }
 
-  def endTurn() = Action { 
-    implicit request: Request[AnyContent] =>
-      updatedIds =  List(".player1", ".player2")
-      controller.switchPlayer()
-      Ok(mapIdsToJson(ids = updatedIds))
-  }
-
-  def drawCard() = Action { 
-    implicit request: Request[AnyContent] =>
-      updatedIds = List(".deckP2Background", ".hand-active");
-      controller.drawCard()
-      Ok(mapIdsToJson(ids = updatedIds))
-  }
-
-  def directAttack() = Action { 
-    implicit request: Request[AnyContent] =>
-      var fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt
-      updatedIds = List(".player2");
-      controller.directAttack(Move(fieldSlotActive = fieldSlotActive))
-      Ok(mapIdsToJson(ids = updatedIds))
-  }
-
-  def attack() = Action {
-    implicit request: Request[AnyContent] =>
-      updatedIds = List(".fieldbar-inactive", ".fieldbar-active");
-      var fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt
-      var fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt
-      controller.attack(Move(
-        fieldSlotActive = fieldSlotActive, 
-        fieldSlotInactive = fieldSlotInactive
-        )
-      )
-      Ok(mapIdsToJson(ids = updatedIds))
-  }
-
-  def undo() = Action { 
-    implicit request: Request[AnyContent] =>
-      updatedIds =  List(".player1", ".player2");
-      controller.undo
-      Ok(mapIdsToJson(ids = updatedIds))
-  }
-  
-  def redo() = Action { 
-    implicit request: Request[AnyContent] =>
-      updatedIds =  List(".player1", ".player2");
-      controller.redo
-      Ok(mapIdsToJson(ids = updatedIds))
-  }
-
   object WebSocketActorFactory {
     def create(out: ActorRef) = {
       Props(new WebSocketActor(out))
@@ -157,7 +93,16 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
     
     def receive = {
       case msg: String =>
-        out ! (mapIdsToJson(updatedIds).toString)
+        val data = StaticBinding.parseJsValue(msg)
+        (data \ "type").as[String] match {
+          case "placeCard" => handlePlaceCard(data)
+          case "drawCard" => handleDrawCard()
+          case "attack" => handleAttack(data)
+          case "directAttack" => handleDirectAttack(data)
+          case "undo" => handleUndo()
+          case "redo" => handleRedo()
+          case "endTurn" => handleEndTurn()
+        }
     }
 
     def sendJsonToClient = {
@@ -172,19 +117,60 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
     }
   }
 
+  def handlePlaceCard(data: JsValue) = {
+            var handSlot = (data \ "data" \ "handSlotIndex").as[Int]
+            var fieldSlotActive = (data \ "data" \ "fieldIndex").as[Int]
+
+            updatedIds = List(s"#field$fieldSlotActive", ".hand-active");
+            controller.placeCard(Move(
+              handSlot = handSlot,
+              fieldSlotActive = fieldSlotActive));
+          }
+
+  def handleDrawCard() = {
+            updatedIds = List(".deckP2Background", ".hand-active");
+            controller.drawCard()
+          }
+          
+  def handleUndo() = {
+            updatedIds =  List(".player1", ".player2");
+            controller.undo
+          }
+
+  def handleRedo() = {
+            updatedIds =  List(".player1", ".player2");
+            controller.redo
+          }
+
+  def handleEndTurn() = {
+            updatedIds =  List(".player1", ".player2")
+            controller.switchPlayer()
+          }
+
+  def handleAttack(data: JsValue) = {
+            var fieldSlotInactive = (data \ "data" \ "inactiveFieldIndex").as[Int]
+            var fieldSlotActive = (data \ "data" \ "activeFieldIndex").as[Int]
+            updatedIds = List(".fieldbar-inactive", ".fieldbar-active");
+         
+            controller.attack(Move(
+              fieldSlotActive = fieldSlotActive, 
+              fieldSlotInactive = fieldSlotInactive
+              )
+            )
+          }
+
+  def handleDirectAttack(data: JsValue) = {
+            var fieldSlotActive = (data \ "data" \ "activeFieldIndex").as[Int]
+            
+            updatedIds = List(".player2");
+            controller.directAttack(Move(fieldSlotActive = fieldSlotActive))
+          }
 
   def jsRoutes = Action { implicit request =>
     Ok(
       JavaScriptReverseRouter("jsRoutes")(
         routes.javascript.HomeController.game,
-        routes.javascript.HomeController.placeCard,
-        routes.javascript.HomeController.attack,
-        routes.javascript.HomeController.directAttack,
-        routes.javascript.HomeController.drawCard,
         routes.javascript.HomeController.getCards,
-        routes.javascript.HomeController.undo,
-        routes.javascript.HomeController.redo,
-        routes.javascript.HomeController.endTurn,
         routes.javascript.HomeController.exitGame,
         routes.javascript.HomeController.socket,
       )).as("text/javascript")

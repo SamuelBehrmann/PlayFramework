@@ -1,4 +1,5 @@
 
+var websocket;
 function getImageEndpoint(imgId) { return "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + imgId + ".png" };
 
 function submitModes() {
@@ -81,21 +82,21 @@ function dragLeave() {
 }
 
 function undo() {
-    jsRoutes.controllers.HomeController.undo().ajax({
-        success: (data) => updateGame(data.ids)
-    })
+    websocket.send(`{
+        "type": "undo"
+    }`)
 }
 
 function redo() {
-    jsRoutes.controllers.HomeController.redo().ajax({
-        success: (data) => updateGame(ids = data.ids)
-    })
+    websocket.send(`{
+        "type": "redo"
+    }`)
 }
 
 function endTurn() {
-    jsRoutes.controllers.HomeController.endTurn().ajax({
-        success: (data) => updateGame(ids = data.ids)
-    })
+    websocket.send(`{
+        "type": "endTurn"
+    }`)
 }
 
 function drop(event) {
@@ -134,30 +135,20 @@ function drop(event) {
     }
 
     if (isHandSource) {
-        jsRoutes.controllers.HomeController.placeCard().ajax(
-            {
-                method: 'POST',
-                data: { "fieldIndex": targetIndex, "handSlotIndex": sourceIndex },
-                success: (data) => updateGame(data.ids)
-
-            }
-        )
+        websocket.send(`{
+            "type": "placeCard",
+            "data": {"fieldIndex": ${targetIndex}, "handSlotIndex": ${sourceIndex}}
+        }`)
     } else if (isFieldSource && isFieldTarget) {
-        jsRoutes.controllers.HomeController.attack().ajax(
-            {
-                method: 'POST',
-                data: { "inactiveFieldIndex": targetIndex, "activeFieldIndex": sourceIndex },
-                success: (data) => updateGame(data.ids)
-            }
-        )
+        websocket.send(`{
+            "type": "attack",
+            "data": { "inactiveFieldIndex": ${targetIndex}, "activeFieldIndex": ${sourceIndex} }
+        }`)
     } else {
-        jsRoutes.controllers.HomeController.directAttack().ajax(
-            {
-                method: 'POST',
-                data: { "activeFieldIndex": sourceIndex },
-                success: (data) => updateGame(data.ids)
-            },
-        )
+        websocket.send(`{
+            "type": "directAttack",
+            "data": { "activeFieldIndex": ${sourceIndex} }
+        }`)
     }
 
     this.classList.remove('drag-over');
@@ -189,14 +180,10 @@ $('#topheader .navbar-nav a').on('click', function () {
     $(this).parent('li').addClass('active');
 });
 
-//Karte ziehen
 function drawCard() {
-    jsRoutes.controllers.HomeController.drawCard().ajax(
-        {
-            method: 'POST',
-            success: (data) => updateGame(data.ids)
-        }
-    );
+    websocket.send(`{
+        "type": "drawCard"
+    }`)
 }
 
 function calculateGameAspectRatio() {
@@ -230,7 +217,7 @@ function handleResize() {
 }
 
 function connectWebSocket() {
-    var websocket = new WebSocket("ws://localhost:9000/websocket");
+    websocket = new WebSocket("ws://localhost:9000/websocket");
     websocket.setTimeout
 
     websocket.onopen = function (event) {
