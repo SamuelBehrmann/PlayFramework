@@ -38,17 +38,22 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
   }
 
   def game() = Action { implicit request: Request[AnyContent] =>
-    var clientId = ()
+    var clientId:Option[Int] = None
     
     if(request.hasBody) {
-      clientId = request.body.asFormUrlEncoded.get("id").head.toInt
+      clientId = Some(request.body.asFormUrlEncoded.get("id").head.toInt)
+      if(!clientId.map(clientId => players.contains(clientId)).getOrElse(true) && players.length < 2) {
+        players = players.addOne(clientId.get)
+        println("added: " + clientId.get)
+      }
     }
+    println(clientId.map(clientID => players.indexOf(clientID)))
     Ok(controller.gameState match {
                 case GameState.CHOOSEMODE => views.html.gamemode()
-                case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(controller = controller)(players.indexOf(clientId))
-                case GameState.MAINGAME => views.html.game(msg = controller.errorMsg.getOrElse(controller.field.players(0).name +  hearthstoneMini.aview.Strings.istDranMsg))(controller = controller)(players.indexOf(clientId))
-                case GameState.WIN => views.html.game(msg = controller.getWinner().get + hearthstoneMini.aview.Strings.gewonnenMsg)(controller = controller)(players.indexOf(clientId))
-                case GameState.EXIT => views.html.game(msg = "")(controller = controller)(players.indexOf(clientId))
+                case GameState.ENTERPLAYERNAMES => views.html.game(msg = controller.errorMsg.get)(controller = controller)(clientId.map(clientID => players.indexOf(clientID)))
+                case GameState.MAINGAME => views.html.game(msg = controller.errorMsg.getOrElse(controller.field.players(0).name +  hearthstoneMini.aview.Strings.istDranMsg))(controller = controller)(clientId.map(clientID => players.indexOf(clientID)))
+                case GameState.WIN => views.html.game(msg = controller.getWinner().get + hearthstoneMini.aview.Strings.gewonnenMsg)(controller = controller)(clientId.map(clientID => players.indexOf(clientID)))
+                case GameState.EXIT => views.html.game(msg = "")(controller = controller)(clientId.map(clientID => players.indexOf(clientID)))
             }
       )
   }
@@ -116,18 +121,21 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
       out ! (mapIdsToJson(updatedIds).toString)
     }
   }
-  
+
+  def disconnect() = Action {
+    implicit request: Request[AnyContent] => 
+      var id = request.body.asFormUrlEncoded.get("id").head.toInt
+      players.remove(players.indexOf(id))
+      println("disconnect" + players)
+      Ok("")
+  }
+
   def socket() = WebSocket.accept[String, String] { request =>
-    if(!players.contains(request.id.toInt) && players.length < 2) {
-      players = players.addOne(request.id.toInt)
-      println("added: " + request.id.toInt)
-    }
     ActorFlow.actorRef { out =>
       println("Connect received")
       out ! s"""{"id": ${request.id.toInt}}"""
       WebSocketActorFactory.create(out)
-    }
-    
+    } 
   }
 
   def handlePlaceCard(data: JsValue) = {
@@ -164,7 +172,7 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
             var fieldSlotInactive = (data \ "data" \ "inactiveFieldIndex").as[Int]
             var fieldSlotActive = (data \ "data" \ "activeFieldIndex").as[Int]
             updatedIds = List(".fieldbar-inactive", ".fieldbar-active");
-         
+
             controller.attack(Move(
               fieldSlotActive = fieldSlotActive, 
               fieldSlotInactive = fieldSlotInactive
@@ -186,6 +194,7 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
         routes.javascript.HomeController.getCards,
         routes.javascript.HomeController.exitGame,
         routes.javascript.HomeController.socket,
+        routes.javascript.HomeController.disconnect,
       )).as("text/javascript")
   }
 }

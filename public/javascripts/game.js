@@ -4,10 +4,6 @@ var clientId;
 
 function getImageEndpoint(imgId) { return "https://art.hearthstonejson.com/v1/render/latest/deDE/512x/" + imgId + ".png" };
 
-function submitModes() {
-    document.getElementById('gamemodeForm').submit();
-}
-
 function exitGame() {
     jsRoutes.controllers.HomeController.exitGame().ajax({ method: 'GET' }).done(
         (_) => {
@@ -159,15 +155,16 @@ function drop(event) {
 function updateGame(ids) {
     jsRoutes.controllers.HomeController.game()
         .ajax({
-            method: sessionStorage.getItem('clientId') ? 'POST' : 'GET',
+            method: 'POST',
             data: {
-                "id": sessionStorage.getItem("clientId")
+                "id": sessionStorage.getItem("clientId"),
             },
             success: data => {
-                const parser = new DOMParser();
-                const $remoteDocument = parser.parseFromString(data, "text/html");
-                ids.concat(['#msg']).forEach(id =>
+                const parser = new DOMParser()
+                const $remoteDocument = parser.parseFromString(data, "text/html")
+                ids.concat(['#msg']).forEach(id =>{
                     updateId(id, $remoteDocument)
+                }
                 );
                 registerListeners()
             },
@@ -230,6 +227,10 @@ function connectWebSocket() {
     }
 
     websocket.onclose = function () {
+        jsRoutes.controllers.HomeController.disconnect().ajax({
+            method: 'POST',
+            data: {"id": sessionStorage.getItem("clientId")}
+        })
         console.log('Connection with Websocket Closed!');
     };
 
