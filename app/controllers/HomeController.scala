@@ -10,10 +10,16 @@ import hearthstoneMini.model.fieldComponent.fieldImpl.{Field => Field}
 import hearthstoneMini.controller.Strategy
 import play.api.routing.JavaScriptReverseRouter
 import play.api.libs.json._
+import play.api.libs.streams.ActorFlow
+import akka.actor._
+import akka.actor.ActorSystem
+import hearthstoneMini.util.Observer
+import hearthstoneMini.util.Event
 
 @Singleton
-class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+class HomeController @Inject()(implicit system: ActorSystem, val controllerComponents: ControllerComponents) extends BaseController {
   val controller = hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.controller
+  var updatedIds: List[String] = List();
 
   def getCards()= Action { implicit request: Request[AnyContent] =>
      var values = controller.field.players.map(player => 
@@ -60,11 +66,12 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       var handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt
       var fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt
 
+      updatedIds = List(s"#field$fieldSlotActive", ".hand-active");
       controller.placeCard(Move(
         handSlot = handSlot,
         fieldSlotActive = fieldSlotActive));
 
-      Ok(mapIdsToJson(ids = List(s"#field$fieldSlotActive", ".hand-active")))
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def mapIdsToJson(ids: List[String]) = {
@@ -86,50 +93,85 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def endTurn() = Action { 
-    controller.switchPlayer()
-    
     implicit request: Request[AnyContent] =>
-    Ok(mapIdsToJson(ids = List(".player1", ".player2")))
+      updatedIds =  List(".player1", ".player2")
+      controller.switchPlayer()
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def drawCard() = Action { 
     implicit request: Request[AnyContent] =>
+      updatedIds = List(".deckP2Background", ".hand-active");
       controller.drawCard()
-      Ok(mapIdsToJson(ids = List(".deckP2Background", ".hand-active")))
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def directAttack() = Action { 
     implicit request: Request[AnyContent] =>
       var fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt
+      updatedIds = List(".player2");
       controller.directAttack(Move(fieldSlotActive = fieldSlotActive))
-      Ok(mapIdsToJson(ids = List(".player2")))
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def attack() = Action {
     implicit request: Request[AnyContent] =>
+      updatedIds = List(".fieldbar-inactive", ".fieldbar-active");
       var fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt
       var fieldSlotInactive = request.body.asFormUrlEncoded.get("inactiveFieldIndex").head.toInt
       controller.attack(Move(
         fieldSlotActive = fieldSlotActive, 
         fieldSlotInactive = fieldSlotInactive
         )
-      ) 
-      Ok(mapIdsToJson(ids = List(".fieldbar-inactive", ".fieldbar-active")))
+      )
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def undo() = Action { 
-    controller.undo
-    
     implicit request: Request[AnyContent] =>
-    Ok(mapIdsToJson(ids = List(".player1", ".player2")))
+      updatedIds =  List(".player1", ".player2");
+      controller.undo
+      Ok(mapIdsToJson(ids = updatedIds))
   }
   
   def redo() = Action { 
-    controller.redo
-    
     implicit request: Request[AnyContent] =>
-    Ok(mapIdsToJson(ids = List(".player1", ".player2")))
+      updatedIds =  List(".player1", ".player2");
+      controller.redo
+      Ok(mapIdsToJson(ids = updatedIds))
   }
+
+  object WebSocketActorFactory {
+    def create(out: ActorRef) = {
+      Props(new WebSocketActor(out))
+    }
+  }
+
+  class WebSocketActor(out: ActorRef) extends Actor with Observer {
+    controller.add(this)
+
+    def update(e: Event, msg: Option[String]): Unit = {
+      sendJsonToClient
+      println("update")
+    }
+    
+    def receive = {
+      case msg: String =>
+        out ! (mapIdsToJson(updatedIds).toString)
+    }
+
+    def sendJsonToClient = {
+      out ! (mapIdsToJson(updatedIds).toString)
+    }
+  }
+  
+  def socket() = WebSocket.accept[String, String] { request =>
+    ActorFlow.actorRef { out =>
+      println("Connect received")
+      WebSocketActorFactory.create(out)
+    }
+  }
+
 
   def jsRoutes = Action { implicit request =>
     Ok(
@@ -144,6 +186,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
         routes.javascript.HomeController.redo,
         routes.javascript.HomeController.endTurn,
         routes.javascript.HomeController.exitGame,
+        routes.javascript.HomeController.socket,
       )).as("text/javascript")
   }
+
 }
