@@ -17,8 +17,7 @@ import hearthstoneMini.util.Observer
 import hearthstoneMini.util.Event
 
 @Singleton
-class HomeController @Inject()(implicit system: ActorSystem, val controllerComponents: ControllerComponents) extends BaseController {
-  val controller = hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.controller
+class HomeController @Inject()(implicit system: ActorSystem, controllerComponents: ControllerComponents) extends MainController {
   var updatedIds: List[String] = List();
 
   def getCards()= Action { implicit request: Request[AnyContent] =>
