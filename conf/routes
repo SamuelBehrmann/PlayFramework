@@ -35,6 +35,7 @@ GET         /api/redo                   controllers.VueApiController.redo()
 GET         /api/endTurn                controllers.VueApiController.endTurn()
 GET         /api/exitGame               controllers.VueApiController.exitGame()
 GET         /api/drawCard               controllers.VueApiController.drawCard()
+GET         /api/game               controllers.VueApiController.game()
 GET         /api/websocket              controllers.VueApiController.socket()
 
 POST        /api/placeCard              controllers.VueApiController.placeCard()

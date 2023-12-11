@@ -104,7 +104,7 @@ class VueApiController @Inject()(implicit val system: ActorSystem, controllerCom
 
     def socket() = WebSocket.accept[String, String] { request =>
       ActorFlow.actorRef { out =>
-        println("Connect received")
+        println("Vue Connect received")
         WebSocketActorFactory.create(out)
       }
     }
@@ -113,7 +113,7 @@ class VueApiController @Inject()(implicit val system: ActorSystem, controllerCom
       controller.add(this)
 
       def update(e: Event, msg: Option[String]): Unit = {
-        println("Update received")
+        println("Update Vue")
         sendJsonToClient
       }
       
