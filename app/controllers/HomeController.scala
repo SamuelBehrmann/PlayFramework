@@ -17,8 +17,7 @@ import hearthstoneMini.util.Observer
 import hearthstoneMini.util.Event
 
 @Singleton
-class HomeController @Inject()(implicit system: ActorSystem, val controllerComponents: ControllerComponents) extends BaseController {
-  val controller = hearthstoneMini.HearthstoneMini.hearthstoneMiniRunner.controller
+class HomeController @Inject()(implicit system: ActorSystem, controllerComponents: ControllerComponents) extends MainController {
   var updatedIds: List[String] = List();
 
   def getCards()= Action { implicit request: Request[AnyContent] =>
@@ -47,7 +46,7 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
             }
       )
   }
-  
+
   def initGame() = Action {
     implicit request: Request[AnyContent] => 
       controller.setStrategy(
@@ -63,7 +62,6 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
 
   def placeCard() = Action { 
     implicit request: Request[AnyContent] =>
-      println("-------------body: " + request.headers)
       var handSlot = request.body.asFormUrlEncoded.get("handSlotIndex").head.toInt
       var fieldSlotActive = request.body.asFormUrlEncoded.get("fieldIndex").head.toInt
 
@@ -72,14 +70,24 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
         handSlot = handSlot,
         fieldSlotActive = fieldSlotActive));
 
-      Ok("")
+      Ok(mapIdsToJson(ids = updatedIds))
+  }
+
+  def mapIdsToJson(ids: List[String]) = {
+    JsObject(
+        Seq(
+          "ids" -> JsArray(
+              ids.map[JsString](id => JsString(id)).toIndexedSeq
+          )
+        )
+      )
   }
 
   def exitGame() = Action { 
     implicit request: Request[AnyContent] =>
       controller.field = new Field(5);
       controller.gameState = GameState.CHOOSEMODE;
-      controller.notifyObservers(Event.PLAY, msg = None)
+
       Ok("");
   }
 
@@ -87,14 +95,14 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
     implicit request: Request[AnyContent] =>
       updatedIds =  List(".player1", ".player2")
       controller.switchPlayer()
-      Ok("")
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def drawCard() = Action { 
     implicit request: Request[AnyContent] =>
       updatedIds = List(".deckP2Background", ".hand-active");
       controller.drawCard()
-      Ok("")
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def directAttack() = Action { 
@@ -102,7 +110,7 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
       var fieldSlotActive = request.body.asFormUrlEncoded.get("activeFieldIndex").head.toInt
       updatedIds = List(".player2");
       controller.directAttack(Move(fieldSlotActive = fieldSlotActive))
-      Ok("")
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def attack() = Action {
@@ -115,20 +123,21 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
         fieldSlotInactive = fieldSlotInactive
         )
       )
-      Ok("")
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   def undo() = Action { 
     implicit request: Request[AnyContent] =>
       updatedIds =  List(".player1", ".player2");
       controller.undo
-      Ok("")
+      Ok(mapIdsToJson(ids = updatedIds))
   }
   
   def redo() = Action { 
     implicit request: Request[AnyContent] =>
-      
-      Ok(controller.field.toJson)
+      updatedIds =  List(".player1", ".player2");
+      controller.redo
+      Ok(mapIdsToJson(ids = updatedIds))
   }
 
   object WebSocketActorFactory {
@@ -141,17 +150,17 @@ class HomeController @Inject()(implicit system: ActorSystem, val controllerCompo
     controller.add(this)
 
     def update(e: Event, msg: Option[String]): Unit = {
-      println("Update received")
       sendJsonToClient
+      println("update")
     }
     
     def receive = {
       case msg: String =>
-        out ! (controller.field.toJson.toString)
+        out ! (mapIdsToJson(updatedIds).toString)
     }
 
     def sendJsonToClient = {
-      out ! (controller.field.toJson.toString)
+      out ! (mapIdsToJson(updatedIds).toString)
     }
   }
   
