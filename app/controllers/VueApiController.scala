@@ -119,11 +119,11 @@ class VueApiController @Inject()(implicit val system: ActorSystem, controllerCom
       
       def receive = {
         case msg: String =>
-          out ! (controller.field.toJson.toString)
+          out ! (controller.field.toJson)
       }
 
       def sendJsonToClient = {
-        out ! (controller.field.toJson.toString)
+        out ! (controller.field.toJson)
       }
     }
   }
