@@ -9,6 +9,13 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala).enablePlugins(Sb
 //generateReverseRouter := false
 scalaVersion := "2.13.12"
 
+import com.typesafe.sbt.packager.docker.DockerChmodType
+import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
+dockerChmodType := DockerChmodType.UserGroupWriteExecute
+dockerPermissionStrategy := DockerPermissionStrategy.CopyChown
+dockerExposedPorts := Seq(9000)
+dockerBaseImage := "openjdk:17"
+
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "6.0.0-RC2" % Test
 libraryDependencies += "org.webjars.npm" % "less" % "4.1.3"
